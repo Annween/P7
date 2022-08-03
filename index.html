@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Les petits plats</title>
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&family=Roboto:wght@300;400&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <div class="header__logo">
+        <img src="/images/logo.png" alt="Logo">
+    </div>
+</header>
+
+<nav>
+    <form id="global-search" name="global-search">
+        <label></label>
+        <input type="search" name="rechercher" id="rechercher" placeholder="Rechercher une recette">
+        <span class="fa-solid fa-magnifying-glass"></span>
+    </form>
+    <div id="filterContainer">
+
+    </div>
+<!--    <div id="pinnedFilter">
+        <span id="founded"></span>
+        <i id="closeFilter" class="fas fa-times-circle"></i>
+    </div> -->
+</nav>
+<form class="advanced" name="advanced">
+    <section class="advanced__search">
+        <div class="advanced__search__dropdown">
+            <input id="ingredient" class="advanced__search__dropdown__ingredient" type="search"
+                   placeholder="Ingrédients"><i class="fa-solid fa-angle-down icon"></i>
+            <div id="ingredientsContent" class="advanced__search__dropdown__dropdown-content">
+            </div>
+        </div>
+        <div class="advanced__search__dropdown">
+            <input id="appareils" class="advanced__search__dropdown__appareils" type="search" placeholder="Appareils"><i
+                class="fa-solid fa-angle-down icon"></i>
+            <div id="appliancesContent" class="advanced__search__dropdown__dropdown-content">
+            </div>
+        </div>
+        <div class="advanced__search__dropdown">
+            <input id="ustensiles" class="advanced__search__dropdown__ustensiles" type="search"
+                   placeholder="Ustensiles"><i class="fa-solid fa-angle-down icon"></i>
+            <div id="ustensilsContent" class="advanced__search__dropdown__dropdown-content">
+            </div>
+        </div>
+
+        <!--<input id="ingredient" class="advanced__search__inputs__icons__ingredient" type="text" placeholder="Ingrédients"><i class="fa-solid fa-angle-down icon"></i> -->
+        <!--<input id="ustensiles" class="advanced__search__inputs__icons__ustensiles" type="text" placeholder="Ustensiles"><i class="fa-solid fa-angle-down icon"></i> -->
+    </section>
+</form>
+<section id="recipeSection">
+
+</section>
+</body>
+
+<script src="api/api.js"></script>
+<script src="utils/recipeBookController.js"></script>
+<script src="class/RecipeBook.js"></script>
+
+
+</html>

@@ -1,0 +1,226 @@
+@import url("https://use.typekit.net/usd1xck.css");
+@import url("https://use.typekit.net/usd1xck.css");
+body {
+  margin: 10px 15%;
+  font-family: 'Lato', sans-serif;
+}
+  .header {
+
+    &__logo {
+      display: flex;
+      justify-content: center;
+
+      img {
+        max-width: 300px;
+      }
+    }
+
+  }
+
+  nav {
+    form {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      #rechercher {
+        border-radius: 5px;
+        width: 100%;
+        padding: 15px;
+        background-color: #E7E7E7;
+        border: none;
+        margin-top: 50px;
+
+      }
+
+      span {
+        padding-top: 50px;
+        margin-left: -45px;
+        font-size: 20px;
+      }
+    }
+
+    & #filterContainer
+    {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    & #pinnedFilter
+    {
+      display: none;
+      padding: 10px;
+      color: white;
+      //background-color: #68D9A4;
+      width: 14%;
+    }
+
+  }
+
+
+    .advanced__search {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+      &__dropdown {
+        width: 100%;
+        margin-bottom: 10px;
+        input {
+          padding: 15px;
+          border-radius: 5px;
+          border: none;
+          font-weight: bold;
+          color: white;
+          width: 35%;
+
+          &::placeholder {
+            color: white;
+          }
+        }
+
+        &__ingredient {
+          background-color: #3282F7;
+
+        }
+
+        &__appareils {
+          background-color: #68D9A4;
+        }
+
+        &__ustensiles {
+          background-color: #ED6454;
+        }
+
+        i {
+          position: absolute;
+          margin-left: -35px;
+          margin-top: 5px;
+          color: white;
+        }
+
+        .icon {
+          padding: 10px;
+          min-width: 40px;
+
+        }
+
+      &__dropdown-content {
+          padding: 5px;
+          display: none;
+
+          columns: 3 auto;
+
+          ul {
+            color: white;
+            list-style-type: none;
+            li
+            {
+              cursor: pointer;
+            }
+          }
+        }
+
+
+        #ingredientsContent
+        {
+          background-color: #3282F7;
+
+        }
+
+        #appliancesContent
+        {
+          background-color: #68D9A4;
+        }
+
+        #ustensilsContent
+        {
+          background-color: #ED6454;
+        }
+        &:hover &__dropdown-content
+        {
+          display: block;
+        }
+
+      }
+    }
+
+    #recipeSection
+    {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      .card
+      {
+        margin-top: 10px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        width: 380px;
+        height: 364px;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        background-color: #E7E7E7;
+
+        & img
+        {
+          width: 100%;
+          border-radius: 5px 5px 0px 0px;
+          object-fit: cover;
+        }
+
+        & .card-header
+        {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 38px;
+          padding: 5px;
+
+          & .card-title
+          {
+            font-family: lato, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+          }
+        }
+
+        & .container
+        {
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+
+          & .ingredients
+          {
+            width: 50%;
+            & ul
+            {
+              list-style-type: none;
+              padding-inline-start: 10px;
+              white-space: nowrap;
+            }
+
+          }
+
+
+          & .instructions
+          {
+            font-family: roboto, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+
+            p
+            {
+              margin-left: 10px;
+              margin-block-start: 0;
+              margin-block-end: 0;
+            }
+          }
+
+          //justify-content: center;
+
+        }
+
+      }
+    }
+
+

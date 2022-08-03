@@ -1,0 +1,165 @@
+@import url("https://use.typekit.net/usd1xck.css");
+@import url("https://use.typekit.net/usd1xck.css");
+body {
+  margin: 10px 15%;
+  font-family: "Lato", sans-serif;
+}
+
+.header__logo {
+  display: flex;
+  justify-content: center;
+}
+.header__logo img {
+  max-width: 300px;
+}
+
+nav form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav form #rechercher {
+  border-radius: 5px;
+  width: 100%;
+  padding: 15px;
+  background-color: #E7E7E7;
+  border: none;
+  margin-top: 50px;
+}
+nav form span {
+  padding-top: 50px;
+  margin-left: -45px;
+  font-size: 20px;
+}
+nav #filterContainer {
+  display: flex;
+  justify-content: flex-start;
+}
+nav #pinnedFilter {
+  display: none;
+  padding: 10px;
+  color: white;
+  width: 14%;
+}
+
+.advanced__search {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+.advanced__search__dropdown {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.advanced__search__dropdown input {
+  padding: 15px;
+  border-radius: 5px;
+  border: none;
+  font-weight: bold;
+  color: white;
+  width: 35%;
+}
+.advanced__search__dropdown input::placeholder {
+  color: white;
+}
+.advanced__search__dropdown__ingredient {
+  background-color: #3282F7;
+}
+.advanced__search__dropdown__appareils {
+  background-color: #68D9A4;
+}
+.advanced__search__dropdown__ustensiles {
+  background-color: #ED6454;
+}
+.advanced__search__dropdown i {
+  position: absolute;
+  margin-left: -35px;
+  margin-top: 5px;
+  color: white;
+}
+.advanced__search__dropdown .icon {
+  padding: 10px;
+  min-width: 40px;
+}
+.advanced__search__dropdown__dropdown-content {
+  padding: 5px;
+  display: none;
+  columns: 3 auto;
+}
+.advanced__search__dropdown__dropdown-content ul {
+  color: white;
+  list-style-type: none;
+}
+.advanced__search__dropdown__dropdown-content ul li {
+  cursor: pointer;
+}
+.advanced__search__dropdown #ingredientsContent {
+  background-color: #3282F7;
+}
+.advanced__search__dropdown #appliancesContent {
+  background-color: #68D9A4;
+}
+.advanced__search__dropdown #ustensilsContent {
+  background-color: #ED6454;
+}
+.advanced__search__dropdown:hover .advanced__search__dropdown__dropdown-content {
+  display: block;
+}
+
+#recipeSection {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+#recipeSection .card {
+  margin-top: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 380px;
+  height: 364px;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #E7E7E7;
+}
+#recipeSection .card img {
+  width: 100%;
+  border-radius: 5px 5px 0px 0px;
+  object-fit: cover;
+}
+#recipeSection .card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  padding: 5px;
+}
+#recipeSection .card .card-header .card-title {
+  font-family: lato, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+#recipeSection .card .container {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+#recipeSection .card .container .ingredients {
+  width: 50%;
+}
+#recipeSection .card .container .ingredients ul {
+  list-style-type: none;
+  padding-inline-start: 10px;
+  white-space: nowrap;
+}
+#recipeSection .card .container .instructions {
+  font-family: roboto, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+#recipeSection .card .container .instructions p {
+  margin-left: 10px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+/*# sourceMappingURL=main.css.map */
