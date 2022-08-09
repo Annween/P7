@@ -34,12 +34,16 @@ nav form span {
 nav #filterContainer {
   display: flex;
   justify-content: flex-start;
+  margin-top: 20px;
 }
 nav #pinnedFilter {
   display: none;
   padding: 10px;
   color: white;
   width: 14%;
+}
+nav #pinnedFilter .closeFilter {
+  cursor: pointer;
 }
 
 .advanced__search {
@@ -84,6 +88,7 @@ nav #pinnedFilter {
 .advanced__search__dropdown__dropdown-content {
   padding: 5px;
   display: none;
+  position: absolute;
   columns: 3 auto;
 }
 .advanced__search__dropdown__dropdown-content ul {

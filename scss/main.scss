@@ -44,6 +44,8 @@ body {
     {
       display: flex;
       justify-content: flex-start;
+
+      margin-top: 20px;
     }
 
     & #pinnedFilter
@@ -51,8 +53,12 @@ body {
       display: none;
       padding: 10px;
       color: white;
-      //background-color: #68D9A4;
       width: 14%;
+
+      .closeFilter
+      {
+        cursor: pointer;
+      }
     }
 
   }
@@ -107,7 +113,7 @@ body {
       &__dropdown-content {
           padding: 5px;
           display: none;
-
+          position: absolute;
           columns: 3 auto;
 
           ul {

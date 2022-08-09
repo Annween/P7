@@ -1,3 +1,21 @@
+//declare global variables for filters
+/*const filters = new Map(
+    {
+        ingredient: {
+            dropdownId: 'ingredientsContent',
+            color: '3282F7'
+        }
+        , appareils: {
+            dropdownId: 'appliancesContent',
+            color: '68D9A4'
+        }
+        , ustensiles: {
+            dropdownId: 'ustensilsContent',
+            color: 'ed6454'
+        }
+    }
+); */
+
 //gets the recipe array from API and passes it as a parameter to the constructor of the RecipeBook class
 async function getRecipes(recipesArray) {
     return new RecipeBook(recipesArray);
@@ -55,9 +73,7 @@ function displayUstensilsList(recipesBook) {
 //display the founded recipes in the DOM
 function displaySearchRecipe(recipeBook) {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
-       const recipeSection = document.getElementById('recipeSection');
          const results = recipeBook.searchRecipe(document.getElementById('rechercher').value);
-            recipeSection.innerHTML = '';
             showRecipe(recipeBook, results);
     })
 }
@@ -72,10 +88,6 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
     // key => ingredient { dropdownId => value, color => value }
     //mettre tout en haut en global
 
-    if(elementId === 'ingredient'){
-        dropdownId = 'ingredientsContent';
-        color = '3282F7'
-    }
 
     document.getElementById(elementId).addEventListener('keyup', ev => {
         const dropdownContent = document.getElementById(dropdownId);
@@ -93,22 +105,26 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
                 const span = document.createElement('span');
                 span.id = 'founded';
                 const close = document.createElement('i')
-                close.classList.add('fas', 'fa-times-circle');
-                close.id = 'closeFilter'
+                close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
                 close.onclick = closeFilter;
                 pinnedFilter.style = 'display: flex; background-color: #' + color +'; justify-content: space-between; align-items: center;'
                 span.innerHTML = li.innerHTML;
                 filterContainer.appendChild(pinnedFilter)
                 pinnedFilter.appendChild(span);
                 pinnedFilter.appendChild(close);
-                //creer une fonction à part pour le click
+
+                const results = recipesBook.searchRecipe(false, li.innerHTML);
+                showRecipe(recipesBook, results);
             })
+
+
         })
         document.querySelector('nav').appendChild(filterContainer);
         dropdownContent.appendChild(ul);
     })
 
 }
+
 
 function closeFilter() {
     const pinnedFilter = document.getElementById('pinnedFilter');
@@ -117,61 +133,63 @@ function closeFilter() {
 
 //display the recipe in the DOM
 function showRecipe(recipesBook, results = false) {
+    let recipes = recipesBook.Recipes;
+
     if (results) {
-        const recipes = results;
+        recipes = results;
     }
-    const recipes = recipesBook.Recipes;
-    //console.log(recipes)
     const body = document.querySelector('body')
     const section = document.getElementById('recipeSection');
+    section.innerHTML = '';
     recipes.forEach(recipe => {
-        const card = document.createElement('div');
-        card.classList.add('card');
-        const empty = document.createElement('img');
-        empty.src = 'https://via.placeholder.com/400x200';
-        empty.classList.add('empty');
+     const card = document.createElement('div');
+     card.classList.add('card');
+     const empty = document.createElement('img');
+     empty.src = 'http://via.placeholder.com/400x200';
+     empty.classList.add('empty');
 
-        const container = document.createElement('div');
-        container.classList.add('container');
-        const header = document.createElement('div');
-        header.classList.add('card-header');
-        card.appendChild(empty);
-        header.appendChild(container);
-        const h3 = document.createElement('h3');
-        h3.classList.add('card-title');
-        h3.innerHTML = truncate(recipe.name, 25);
-        const time = document.createElement('h4');
-        time.innerHTML = '<i class="fa-regular fa-clock"></i> ' + recipe.time + ' min';
-        header.appendChild(h3)
-        header.appendChild(time)
-        card.appendChild(header);
-        const ingredients = document.createElement('div');
-        ingredients.classList.add('ingredients');
-        const listElement = document.createElement('ul');
-        recipe.ingredients.forEach(ingredient => {
-            const li = document.createElement('li');
-            if (ingredient.quantity === '' || ingredient.quantity === undefined || ingredient.unit === '' || ingredient.unit === undefined) {
-                li.innerHTML = ingredient.ingredient;
-            } else {
-                li.innerHTML = ingredient.ingredient + ' : ' + ingredient.quantity + ' ' + ingredient.unit;
-            }
-            listElement.appendChild(li);
-            ingredients.appendChild(listElement);
-            container.appendChild(ingredients)
-        });
+     const container = document.createElement('div');
+     container.classList.add('container');
+     const header = document.createElement('div');
+     header.classList.add('card-header');
+     card.appendChild(empty);
+     header.appendChild(container);
+     const h3 = document.createElement('h3');
+     h3.classList.add('card-title');
+     h3.innerHTML = truncate(recipe.name, 25);
+     const time = document.createElement('h4');
+     time.innerHTML = '<i class="fa-regular fa-clock"></i> ' + recipe.time + ' min';
+     header.appendChild(h3)
+     header.appendChild(time)
+     card.appendChild(header);
+     const ingredients = document.createElement('div');
+     ingredients.classList.add('ingredients');
+     const listElement = document.createElement('ul');
+     recipe.ingredients.forEach(ingredient => {
+         const li = document.createElement('li');
 
-        const instructions = document.createElement('div');
-        instructions.classList.add('instructions');
-        const descriptionBloc = document.createElement('p');
-        descriptionBloc.innerHTML = truncate(recipe.description, 150);
-        instructions.appendChild(descriptionBloc);
-        container.appendChild(instructions);
+         if (ingredient.quantity === '' || ingredient.quantity === undefined || ingredient.unit === '' || ingredient.unit === undefined) {
+             li.innerHTML = '<b>' + ingredient.ingredient + '</b>';
+         } else {
+             li.innerHTML =  '<b>' + ingredient.ingredient + '</b>'+ ' : ' + ingredient.quantity + ' ' + ingredient.unit;
+         }
+         listElement.appendChild(li);
+         ingredients.appendChild(listElement);
+         container.appendChild(ingredients)
+     });
+
+     const instructions = document.createElement('div');
+     instructions.classList.add('instructions');
+     const descriptionBloc = document.createElement('p');
+     descriptionBloc.innerHTML = truncate(recipe.description, 150);
+     instructions.appendChild(descriptionBloc);
+     container.appendChild(instructions);
 
 
-        section.appendChild(card)
-        card.appendChild(container)
+     section.appendChild(card)
+     card.appendChild(container)
 
-    })
+ })
     body.appendChild(section)
 }
 

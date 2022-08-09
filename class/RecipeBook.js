@@ -26,6 +26,7 @@ class RecipeBook
            {
                 ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
                 ingredientsArray = Array.from(ingredientSet)
+                this.sortArray(ingredientsArray)
            })
         })
         return ingredientsArray
@@ -43,6 +44,7 @@ class RecipeBook
         {
             applianceSet.add(recipe.appliance.toLocaleLowerCase())
             applianceArray = Array.from(applianceSet)
+            this.sortArray(applianceArray)
         })
         return applianceArray
     }
@@ -60,11 +62,29 @@ class RecipeBook
             })
         })
         ustentilsArray = Array.from(ustentilsSet)
+        this.sortArray(ustentilsArray)
         return ustentilsArray
     }
 
-    searchRecipe(search) {
-        return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+    searchRecipe(search = false, filter = false) {
+
+        if(filter) {
+           if (this.ingredientArray.includes(filter)) {
+               console.log('ingredients')
+               return this.recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter))
+           }
+           else if(this.applicanceArray.includes(filter)) {
+               console.log('appliances')
+                return this.recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter))
+
+            }
+           else if(this.ustensilsArray.includes(filter)) {
+               console.log('ustensils')
+                return this.recipes.filter(recipe => recipe.ustensils.toLocaleLowerCase().includes(filter))
+
+            }
+        }if(search) return  this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+
     }
 
     //faire un switch case
@@ -80,6 +100,11 @@ class RecipeBook
 
      }
 
+     sortArray(array) {
+        return array.sort(function(a, b) {
+                return a.localeCompare(b);
+            })
+     }
 
     //le dropdown content doit recouvrir les inputs du dessous
 
