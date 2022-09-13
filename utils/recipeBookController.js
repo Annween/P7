@@ -1,14 +1,11 @@
 //declare global variables for filters
 const filtersConfig = {
     ingredient: {
-        dropdownId: 'ingredientsContent',
-        color: '3282F7'
+        dropdownId: 'ingredientsContent', color: '3282F7'
     }, appareils: {
-        dropdownId: 'appliancesContent',
-        color: '68D9A4'
+        dropdownId: 'appliancesContent', color: '68D9A4'
     }, ustensiles: {
-        dropdownId: 'ustensilsContent',
-        color: 'ed6454'
+        dropdownId: 'ustensilsContent', color: 'ed6454'
     }
 }
 
@@ -75,8 +72,8 @@ function displayUstensilsList(recipesBook) {
 //display the founded recipes in the DOM
 function displaySearchRecipe(recipeBook) {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
-         const results = recipeBook.doSearch(document.getElementById('rechercher').value);
-            showRecipe(recipeBook, results);
+        const results = recipeBook.doSearch(document.getElementById('rechercher').value);
+        showRecipe(recipeBook, results);
     })
 }
 
@@ -99,61 +96,41 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
             li.addEventListener('click', function (e) {
                 const pinnedFilter = document.createElement('div');
                 pinnedFilter.classList.add('pinnedFilter');
+                pinnedFilter.id = fltr;
                 const span = document.createElement('span');
-                span.id = fltr;
+                //span.id = fltr;
                 const close = document.createElement('i')
                 close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
-                //close.onclick = closeFilter;
-                pinnedFilter.style = 'display: flex; background-color: #' + color +'; justify-content: space-between; align-items: center;'
+                close.onclick = closeFilter(pinnedFilter.id);
+                pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
                 span.innerHTML = fltr;
                 filterContainer.appendChild(pinnedFilter)
                 pinnedFilter.appendChild(span);
                 pinnedFilter.appendChild(close);
-
                 searchWithFilter(recipesBook, [fltr]);
-                //searchFilter('', [fltr]);
-
-                //showRecipe(recipesBook, filters)
             })
         })
-       document.querySelector('nav').appendChild(filterContainer);
-       dropdownContent.appendChild(ul);
+        document.querySelector('nav').appendChild(filterContainer);
+        dropdownContent.appendChild(ul);
     })
 }
-//display adequate recipe by choosing a filter
-//function searchFilter(recipesBook) {
-//    const filters = document.getElementById('filterContainer')
-//    if(filters.childElementCount > 0) {
-//        for( const filter in filters.children) {
-//            const results = recipesBook.doSearch('', );
-//            console.log(document.querySelector('.founded').innerHTML);
-//            showRecipe(recipesBook, results);
-//        }
-//    }
-//}
 
 //display the recipe with required criteria
-function searchWithFilter(recipesBook, filters)
-{
-    //const filters = displayFilterContent(recipesBook, 'ingredient', 'ingredientsContent', '3282F7')
-    if(document.getElementById('rechercher').value.length > 0 && filters) {
-        console.log('toto');
-        filters.forEach(filter => {
-            const results = recipesBook.doSearch(document.getElementById('rechercher').value, filter);
-            console.log(results);
-            return showRecipe(recipesBook, results);
-        })
-
+function searchWithFilter(recipesBook, filters) {
+    if (document.getElementById('rechercher').value.length > 0) {
+        const results = recipesBook.doSearch(document.getElementById('rechercher').value, filters);
+        return showRecipe(recipesBook, results);
+    } else {
+        const results = recipesBook.doSearch('', filters);
+        return showRecipe(recipesBook, results);
     }
 }
 
 
-function closeFilter() {
-    document.querySelectorAll('.closeFilter').forEach(filter => {
-        filter.addEventListener('click', function (e) {
-            e.currentTarget.remove();
-        })
-    })
+function closeFilter(id) {
+    return function () {
+        document.getElementById(id).remove();
+    }
 }
 
 //display the recipe in the DOM
@@ -167,64 +144,57 @@ function showRecipe(recipesBook, results = false) {
     const section = document.getElementById('recipeSection');
     section.innerHTML = '';
     recipes.forEach(recipe => {
-     const card = document.createElement('div');
-     card.classList.add('card');
-     const empty = document.createElement('img');
-     empty.src = 'http://via.placeholder.com/400x200';
-     empty.classList.add('empty');
+        const card = document.createElement('div');
+        card.classList.add('card');
+        const empty = document.createElement('img');
+        empty.src = 'http://via.placeholder.com/400x200';
+        empty.classList.add('empty');
 
-     const container = document.createElement('div');
-     container.classList.add('container');
-     const header = document.createElement('div');
-     header.classList.add('card-header');
-     card.appendChild(empty);
-     header.appendChild(container);
-     const h3 = document.createElement('h3');
-     h3.classList.add('card-title');
-     h3.innerHTML = ToolsClass.truncate(recipe.name, 25);
-     const time = document.createElement('h4');
-     time.innerHTML = '<i class="fa-regular fa-clock"></i> ' + recipe.time + ' min';
-     header.appendChild(h3)
-     header.appendChild(time)
-     card.appendChild(header);
-     const ingredients = document.createElement('div');
-     ingredients.classList.add('ingredients');
-     const listElement = document.createElement('ul');
-     recipe.ingredients.forEach(ingredient => {
-         const li = document.createElement('li');
+        const container = document.createElement('div');
+        container.classList.add('container');
+        const header = document.createElement('div');
+        header.classList.add('card-header');
+        card.appendChild(empty);
+        header.appendChild(container);
+        const h3 = document.createElement('h3');
+        h3.classList.add('card-title');
+        h3.innerHTML = ToolsClass.truncate(recipe.name, 25);
+        const time = document.createElement('h4');
+        time.innerHTML = '<i class="fa-regular fa-clock"></i> ' + recipe.time + ' min';
+        header.appendChild(h3)
+        header.appendChild(time)
+        card.appendChild(header);
+        const ingredients = document.createElement('div');
+        ingredients.classList.add('ingredients');
+        const listElement = document.createElement('ul');
+        recipe.ingredients.forEach(ingredient => {
+            const li = document.createElement('li');
 
-         if (ingredient.quantity === '' || ingredient.quantity === undefined || ingredient.unit === '' || ingredient.unit === undefined) {
-             li.innerHTML = '<b>' + ingredient.ingredient + '</b>';
-         } else {
-             li.innerHTML =  '<b>' + ingredient.ingredient + '</b>'+ ' : ' + ingredient.quantity + ' ' + ingredient.unit;
-         }
-         listElement.appendChild(li);
-         ingredients.appendChild(listElement);
-         container.appendChild(ingredients)
-     });
+            if (ingredient.quantity === '' || ingredient.quantity === undefined || ingredient.unit === '' || ingredient.unit === undefined) {
+                li.innerHTML = '<b>' + ingredient.ingredient + '</b>';
+            } else {
+                li.innerHTML = '<b>' + ingredient.ingredient + '</b>' + ' : ' + ingredient.quantity + ' ' + ingredient.unit;
+            }
+            listElement.appendChild(li);
+            ingredients.appendChild(listElement);
+            container.appendChild(ingredients)
+        });
 
 
-     const instructions = document.createElement('div');
-     instructions.classList.add('instructions');
-     const descriptionBloc = document.createElement('p');
-     descriptionBloc.innerHTML = ToolsClass.truncate(recipe.description, 150);
-     instructions.appendChild(descriptionBloc);
-     container.appendChild(instructions);
+        const instructions = document.createElement('div');
+        instructions.classList.add('instructions');
+        const descriptionBloc = document.createElement('p');
+        descriptionBloc.innerHTML = ToolsClass.truncate(recipe.description, 150);
+        instructions.appendChild(descriptionBloc);
+        container.appendChild(instructions);
 
-     section.appendChild(card)
-     card.appendChild(container)
+        section.appendChild(card)
+        card.appendChild(container)
 
- })
+    })
     body.appendChild(section)
 }
 
-/*function test(toolsClass, recipesBook) {
-    const array = recipesBook.getAllIngredientsRecipe();
-    toolsClass.removePluralFromJSON(array);
-
-}*/
-
-//mettre dans un fichier séparé
 
 //init the app
 async function init() {
@@ -237,11 +207,7 @@ async function init() {
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
     displaySearchRecipe(recipesBook);
     showRecipe(recipesBook);
-    searchFilter(recipesBook);
-    //searchWithFilter(recipesBook);
-    closeFilter();
-    //test(toolsClass, recipesBook);
-
+    //closeFilter();
 }
 
 

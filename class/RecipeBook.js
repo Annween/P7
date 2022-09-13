@@ -7,30 +7,27 @@ class RecipeBook
         this.applicanceArray = this.getAllAppliancesRecipe();
     }
 
-
-
     get Recipes() {
         return this.recipes;
     }
 
 
     doSearch(search, filters) {
-        //prévoir le cas → si search = 0 On renvoie toutes les recettes
         const results = this.findSearchBarResults(search);
         return this.filterResults(results, filters);
     }
 
     filterResults(recipes, filters) {
+        console.log(filters)
         //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
-            console.log('c bon')
-            console.log(recipes)
+            console.log('avant',recipes)
             filters.forEach(filter => {
+                console.log('forEach',recipes)
                 recipes = this.doFilter(recipes, filter)
-                console.log(recipes)
             })
 
-            console.log(recipes)
+            console.log('après',recipes)
         }
         return recipes;
     }
@@ -50,7 +47,6 @@ class RecipeBook
         }
 
         if (this.ingredientArray.includes(filter)) {
-           // console.log('ici c bon')
             return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter))
         }
         else if(this.applicanceArray.includes(filter)) {
@@ -59,11 +55,6 @@ class RecipeBook
         else if(this.ustensilsArray.includes(filter)) {
             return recipes.filter(recipe => recipe.ustensils.toLocaleLowerCase().includes(filter))
         }
-    }
-
-    //rajouter une méthode searchQuelqueChose(type --> quel tableau de filtre, motRecherché --> coco ) retourne une liste d'élément --> refresh contenu du filtre dans le controller
-    search(array, motRecherche, filter) {
-        return array.filter(item => item.includes(motRecherche) && item.includes(filter))
     }
 
     //sort array by ingredients
@@ -81,7 +72,7 @@ class RecipeBook
                ToolsClass.sortArray(ingredientsArray)
            })
         })
-        return ingredientsArray
+        return ToolsClass.removePlural(ingredientsArray)
     }
 
 
@@ -97,7 +88,7 @@ class RecipeBook
             applianceArray = Array.from(applianceSet)
             ToolsClass.sortArray(applianceArray)
         })
-        return applianceArray
+        return  ToolsClass.removePlural(applianceArray)
     }
 
     //sort array by ustensils
@@ -114,7 +105,7 @@ class RecipeBook
         })
         ustentilsArray = Array.from(ustentilsSet)
         ToolsClass.sortArray(ustentilsArray)
-        return ustentilsArray
+        return ToolsClass.removePlural(ustentilsArray)
     }
 
 

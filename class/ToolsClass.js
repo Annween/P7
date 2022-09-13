@@ -1,10 +1,7 @@
 class ToolsClass {
-    //remove plural
-    static removePluralFromJSON(array) {
-        array.forEach(element => {
-            if (element[element.length - 1] === 's') element.slice(0, -1);
-        })
-        return console.log(array);
+    //remove plural and other characters
+    static removePlural(array) {
+        return array.filter(element => element[element.length - 1] !== 's' && element[element.length - 1] !== '.' && element !== 'casserole' && element !== 'crême fraîche')
     }
 
     //truncate string to a certain length
