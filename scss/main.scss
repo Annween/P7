@@ -48,7 +48,7 @@ body {
       margin-top: 20px;
     }
 
-    & #pinnedFilter
+    & .pinnedFilter
     {
       display: none;
       padding: 10px;
@@ -69,7 +69,7 @@ body {
       display: flex;
       justify-content: flex-start;
       &__dropdown {
-        width: 100%;
+        //width: 100%;
         margin-bottom: 10px;
         input {
           padding: 15px;
@@ -77,7 +77,7 @@ body {
           border: none;
           font-weight: bold;
           color: white;
-          width: 35%;
+          width: 80%;
 
           &::placeholder {
             color: white;
@@ -145,7 +145,9 @@ body {
         &:hover &__dropdown-content
         {
           display: block;
+          //width: 100%;
         }
+
 
       }
     }

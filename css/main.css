@@ -36,13 +36,13 @@ nav #filterContainer {
   justify-content: flex-start;
   margin-top: 20px;
 }
-nav #pinnedFilter {
+nav .pinnedFilter {
   display: none;
   padding: 10px;
   color: white;
   width: 14%;
 }
-nav #pinnedFilter .closeFilter {
+nav .pinnedFilter .closeFilter {
   cursor: pointer;
 }
 
@@ -52,7 +52,6 @@ nav #pinnedFilter .closeFilter {
   justify-content: flex-start;
 }
 .advanced__search__dropdown {
-  width: 100%;
   margin-bottom: 10px;
 }
 .advanced__search__dropdown input {
@@ -61,7 +60,7 @@ nav #pinnedFilter .closeFilter {
   border: none;
   font-weight: bold;
   color: white;
-  width: 35%;
+  width: 80%;
 }
 .advanced__search__dropdown input::placeholder {
   color: white;
