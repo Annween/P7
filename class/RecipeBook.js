@@ -18,16 +18,11 @@ class RecipeBook
     }
 
     filterResults(recipes, filters) {
-        console.log(filters)
         //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
-            console.log('avant',recipes)
             filters.forEach(filter => {
-                console.log('forEach',recipes)
                 recipes = this.doFilter(recipes, filter)
             })
-
-            console.log('après',recipes)
         }
         return recipes;
     }
@@ -41,19 +36,23 @@ class RecipeBook
 
 
 
+
     doFilter(recipes = false, filter) {
         if (!recipes) {
             recipes = this.recipes;
         }
-
         if (this.ingredientArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter))
+            // find recipes with singular or plural ingredient
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's'))
+            //return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter) || recipe.ingredients.find(recipe.ingredient.replace('', '').includes(filter)))
         }
         else if(this.applicanceArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter))
+            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's'))
+            //return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter))
         }
         else if(this.ustensilsArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ustensils.toLocaleLowerCase().includes(filter))
+            return recipes.filter(recipe => recipe.ustensils.includes(filter) || recipe.ustensils.includes(filter + 's'))
+            //return recipes.filter(recipe => recipe.ustensils.includes(filter))
         }
     }
 
@@ -70,9 +69,10 @@ class RecipeBook
                 ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
                 ingredientsArray = Array.from(ingredientSet)
                ToolsClass.sortArray(ingredientsArray)
+               ToolsClass.removeDuplicates(ingredientsArray)
            })
         })
-        return ToolsClass.removePlural(ingredientsArray)
+        return ingredientsArray
     }
 
 
@@ -87,8 +87,9 @@ class RecipeBook
             applianceSet.add(recipe.appliance.toLocaleLowerCase())
             applianceArray = Array.from(applianceSet)
             ToolsClass.sortArray(applianceArray)
+            ToolsClass.removeDuplicates(applianceArray)
         })
-        return  ToolsClass.removePlural(applianceArray)
+        return applianceArray
     }
 
     //sort array by ustensils
@@ -105,7 +106,8 @@ class RecipeBook
         })
         ustentilsArray = Array.from(ustentilsSet)
         ToolsClass.sortArray(ustentilsArray)
-        return ToolsClass.removePlural(ustentilsArray)
+        ToolsClass.removeDuplicates(ustentilsArray)
+        return ustentilsArray
     }
 
 

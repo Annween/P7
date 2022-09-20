@@ -28,11 +28,14 @@ function displayIngredientList(recipesBook, toolsClass) {
     const dropdownContent = document.getElementById('ingredientsContent');
     const ul = document.createElement('ul');
     ingredientList.forEach(ingredient => {
-        const li = document.createElement('li');
-        dropdownContent.innerHTML = ''
-        li.innerHTML = ingredient;
-        li.classList.add('ingredientElement')
-        ul.appendChild(li);
+        //display only singlua ingredients
+        if (ingredient === ingredient.replace(/s$/, '')) {
+            const li = document.createElement('li');
+            dropdownContent.innerHTML = ''
+            li.innerHTML = ingredient;
+            li.classList.add('ingredientElement')
+            ul.appendChild(li);
+        }
     })
 
     dropdownContent.appendChild(ul);
@@ -43,11 +46,13 @@ function displayApplicanceList(recipesBook) {
     const dropdownContent = document.getElementById('appliancesContent');
     const ul = document.createElement('ul');
     applianceList.forEach(applicance => {
+        if (applicance === applicance.replace(/s$/, '')) {
         const li = document.createElement('li');
         dropdownContent.innerHTML = ''
         li.innerHTML = applicance;
         li.classList.add('applianceElement')
         ul.appendChild(li);
+        }
     })
 
     dropdownContent.appendChild(ul);
@@ -59,11 +64,13 @@ function displayUstensilsList(recipesBook) {
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
     ustensilsList.forEach(ustensils => {
+        if (ustensils === ustensils.replace(/s$/, '')) {
         const li = document.createElement('li');
         dropdownContent.innerHTML = ''
         li.innerHTML = ustensils;
         li.classList.add('ustentsilElement')
         ul.appendChild(li);
+        }
     })
 
     dropdownContent.appendChild(ul);
@@ -77,11 +84,9 @@ function displaySearchRecipe(recipeBook) {
     })
 }
 
-// function displayFilterContent()
 
 //display content of search filter
 function displayFilterContent(recipesBook, elementId, dropdownId, color) {
-
     document.getElementById(elementId).addEventListener('keyup', ev => {
         const dropdownContent = document.getElementById(dropdownId);
         const ul = document.createElement('ul');
@@ -89,49 +94,68 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
         const filteredFilters = recipesBook.searchFilter(document.getElementById(elementId));
         const filterContainer = document.getElementById('filterContainer');
         filteredFilters.forEach(fltr => {
-            const li = document.createElement('li');
-            dropdownContent.innerHTML = ''
-            li.innerHTML = fltr;
-            ul.appendChild(li);
+            if (fltr === fltr.replace(/s$/, '')) {
+                const li = document.createElement('li');
+                dropdownContent.innerHTML = ''
+                li.innerHTML = fltr;
+                ul.appendChild(li);
+
             li.addEventListener('click', function (e) {
-                const pinnedFilter = document.createElement('div');
-                pinnedFilter.classList.add('pinnedFilter');
-                pinnedFilter.id = fltr;
-                const span = document.createElement('span');
-                //span.id = fltr;
-                const close = document.createElement('i')
-                close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
-                close.onclick = closeFilter(pinnedFilter.id);
-                pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
-                span.innerHTML = fltr;
-                filterContainer.appendChild(pinnedFilter)
-                pinnedFilter.appendChild(span);
-                pinnedFilter.appendChild(close);
-                searchWithFilter(recipesBook, [fltr]);
+
+                    const pinnedFilter = document.createElement('div');
+                    pinnedFilter.classList.add('pinnedFilter');
+                    pinnedFilter.id = fltr;
+                    const span = document.createElement('span');
+                    //span.id = fltr;
+                    const close = document.createElement('i')
+                    close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+                    close.onclick = () => document.getElementById(pinnedFilter.id).remove();
+                    pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
+                    span.innerHTML = fltr;
+                    filterContainer.appendChild(pinnedFilter)
+                    pinnedFilter.appendChild(span);
+                    pinnedFilter.appendChild(close);
+                    selectedFilters.push(fltr);
+                    searchWithFilters(recipesBook, selectedFilters);
+
             })
+            }
         })
+
+
         document.querySelector('nav').appendChild(filterContainer);
         dropdownContent.appendChild(ul);
     })
+
+}
+
+//if the user clicks on the remove croce, it will be removed from the list of selected filters
+function synchronizeFilters(recipesBook, selectedFilters) {
+    //if add filter
+    if(selectedFilters.length > 0) {
+        document.querySelectorAll('.closeFilter').forEach(filter => {
+            console.log('ok')
+            filter.addEventListener('click', function (e) {
+                console.log(e.target.parentElement.id);
+                selectedFilters.splice(selectedFilters.indexOf(e.id), 1);
+                searchWithFilters(recipesBook, selectedFilters);
+            })
+        })
+    }
+    else return console.log('non');
 }
 
 //display the recipe with required criteria
-function searchWithFilter(recipesBook, filters) {
+function searchWithFilters(recipesBook, filters) {
     if (document.getElementById('rechercher').value.length > 0) {
-        const results = recipesBook.doSearch(document.getElementById('rechercher').value, filters);
-        return showRecipe(recipesBook, results);
+            const results = recipesBook.doSearch(document.getElementById('rechercher').value);
+            showRecipe(recipesBook, results);
     } else {
         const results = recipesBook.doSearch('', filters);
         return showRecipe(recipesBook, results);
     }
 }
 
-
-function closeFilter(id) {
-    return function () {
-        document.getElementById(id).remove();
-    }
-}
 
 //display the recipe in the DOM
 function showRecipe(recipesBook, results = false) {
@@ -169,16 +193,20 @@ function showRecipe(recipesBook, results = false) {
         const listElement = document.createElement('ul');
         recipe.ingredients.forEach(ingredient => {
             const li = document.createElement('li');
-
-            if (ingredient.quantity === '' || ingredient.quantity === undefined || ingredient.unit === '' || ingredient.unit === undefined) {
+            if (ingredient.quantity === '' || ingredient.quantity === undefined) {
                 li.innerHTML = '<b>' + ingredient.ingredient + '</b>';
+            }else if(ingredient.unit === '' || ingredient.unit === undefined) {
+                li.innerHTML =  ingredient.quantity + ' ' + '<b>' + ingredient.ingredient + '</b> ' ;
             } else {
-                li.innerHTML = '<b>' + ingredient.ingredient + '</b>' + ' : ' + ingredient.quantity + ' ' + ingredient.unit;
+               //if(ingredient.quantity > 1 && ingredient.unit.slice(-1) !== 's') li.innerHTML =  ingredient.quantity + ' ' + '<b>' + ingredient.ingredient + 's' + '</b> ' ;
+               // if(ingredient.quantity === 1 && ingredient.unit.slice(-1) === 's') li.innerHTML =  ingredient.quantity + ' ' + '<b>' + ingredient.unit.replace(/s$/, '') + '</b> ' ;
+                li.innerHTML = '<b>' + ingredient.ingredient + '</b>' + ' : ' + ingredient.quantity + ' ' +  ToolsClass.shorterUnitOfMeasure(ingredient.unit);
             }
             listElement.appendChild(li);
             ingredients.appendChild(listElement);
             container.appendChild(ingredients)
         });
+
 
 
         const instructions = document.createElement('div');
@@ -192,6 +220,14 @@ function showRecipe(recipesBook, results = false) {
         card.appendChild(container)
 
     })
+
+    //if no recipes found with the search criteria display a message
+    if (recipes.length === 0) {
+        const noRecipe = document.createElement('h2');
+        noRecipe.innerHTML = 'Aucune recette ne correspond à vos critères...';
+        noRecipe.style = 'text-align: center; margin-top: 50px';
+        section.appendChild(noRecipe);
+    }
     body.appendChild(section)
 }
 
@@ -207,6 +243,7 @@ async function init() {
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
     displaySearchRecipe(recipesBook);
     showRecipe(recipesBook);
+    synchronizeFilters(recipesBook, selectedFilters);
     //closeFilter();
 }
 

@@ -1,7 +1,42 @@
 class ToolsClass {
-    //remove plural and other characters
-    static removePlural(array) {
-        return array.filter(element => element[element.length - 1] !== 's' && element[element.length - 1] !== '.' && element !== 'casserole' && element !== 'crême fraîche')
+
+    static removeDuplicates(array) {
+        return array.filter(element => element === element)
+    }
+
+    //remove plural from string
+    static removePlural(str) {
+        return str.replace(/s$/, '');
+    }
+
+    //shorter unit of measure
+    static shorterUnitOfMeasure(str) {
+        switch (str) {
+            case 'grammes':
+                return 'g';
+            case 'centilitres':
+                return 'cl';
+            case 'litres':
+                return 'l';
+            case 'cuillères à soupe':
+                return 'càs';
+            case 'cuillère à soupe':
+                return 'càs';
+            case 'cuillère à café':
+                return 'càc';
+            case 'cuillères à café':
+                return 'càc';
+            case 'pincées':
+                return 'p';
+            default:
+                return str;
+        }
+    }
+
+
+    //create function that removes accents
+    static noAccents(array) {
+        return array.map(element => element.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
     }
 
     //truncate string to a certain length
