@@ -24,6 +24,9 @@ class RecipeBook
                 recipes = this.doFilter(recipes, filter)
             })
         }
+        if(filters.length === 0) {
+            return this.recipes
+        }
         return recipes;
     }
 
@@ -41,18 +44,16 @@ class RecipeBook
         if (!recipes) {
             recipes = this.recipes;
         }
+        const forbiddenWords = ToolsClass.excludedWords();
         if (this.ingredientArray.includes(filter)) {
-            // find recipes with singular or plural ingredient
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's'))
-            //return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter) || recipe.ingredients.find(recipe.ingredient.replace('', '').includes(filter)))
+            console.log(forbiddenWords.includes(filter))
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || forbiddenWords.includes(filter) === true))
         }
         else if(this.applicanceArray.includes(filter)) {
             return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's'))
-            //return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter))
         }
         else if(this.ustensilsArray.includes(filter)) {
             return recipes.filter(recipe => recipe.ustensils.includes(filter) || recipe.ustensils.includes(filter + 's'))
-            //return recipes.filter(recipe => recipe.ustensils.includes(filter))
         }
     }
 

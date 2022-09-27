@@ -33,6 +33,16 @@ class ToolsClass {
         }
     }
 
+    //excluded misspelled words
+    static excludedWords() {
+        return {
+            'casserole': ['casserolle.', 'casserole.', 'casserolle'],
+            'crème fraîche': ['crême fraîche', 'crème fraiche'],
+            'viande hachée': 'viande hachée 1% de matière grasse'
+
+        };
+    }
+
 
     //create function that removes accents
     static noAccents(array) {
