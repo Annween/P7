@@ -69,11 +69,11 @@ class RecipeBook
            {
                 ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
                 ingredientsArray = Array.from(ingredientSet)
-               ToolsClass.sortArray(ingredientsArray)
-               ToolsClass.removeDuplicates(ingredientsArray)
+               const cleanedArray =  ToolsClass.sortArray(ingredientsArray)
+               return ToolsClass.removeDuplicates(cleanedArray)
            })
         })
-        return ingredientsArray
+        return ToolsClass.noAccents(ingredientsArray)
     }
 
 
@@ -88,6 +88,7 @@ class RecipeBook
             applianceSet.add(recipe.appliance.toLocaleLowerCase())
             applianceArray = Array.from(applianceSet)
             ToolsClass.sortArray(applianceArray)
+            ToolsClass.noAccents(applianceArray)
             ToolsClass.removeDuplicates(applianceArray)
         })
         return applianceArray
@@ -107,6 +108,7 @@ class RecipeBook
         })
         ustentilsArray = Array.from(ustentilsSet)
         ToolsClass.sortArray(ustentilsArray)
+        ToolsClass.noAccents(ustentilsArray)
         ToolsClass.removeDuplicates(ustentilsArray)
         return ustentilsArray
     }

@@ -31,13 +31,19 @@ function displayIngredientList(recipesBook) {
         //display only singular ingredients
         if (ingredient === ingredient.replace(/s$/, '') ) {
             const forbiddenWords = ToolsClass.excludedWords();
+           // for (const key in forbiddenWords) {
+             //   for (const value of forbiddenWords[key]) {
+               //     if (ingredient !== forbiddenWords[key][value]) {
                         const li = document.createElement('li');
                         dropdownContent.innerHTML = ''
                         li.innerHTML = ingredient;
                         li.classList.add('ingredientElement')
                         ul.appendChild(li);
-                    }
-                })
+                 //   }
+                //}
+            //}
+    }
+    })
 
     dropdownContent.appendChild(ul);
 }
