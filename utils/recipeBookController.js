@@ -29,20 +29,14 @@ function displayIngredientList(recipesBook) {
     const ul = document.createElement('ul');
     ingredientList.forEach(ingredient => {
         //display only singular ingredients
-        if (ingredient === ingredient.replace(/s$/, '') ) {
-            const forbiddenWords = ToolsClass.excludedWords();
-           // for (const key in forbiddenWords) {
-             //   for (const value of forbiddenWords[key]) {
-               //     if (ingredient !== forbiddenWords[key][value]) {
-                        const li = document.createElement('li');
-                        dropdownContent.innerHTML = ''
-                        li.innerHTML = ingredient;
-                        li.classList.add('ingredientElement')
-                        ul.appendChild(li);
-                 //   }
-                //}
-            //}
-    }
+        if (ingredient === ingredient.replace(/s$/, '')) {
+
+            const li = document.createElement('li');
+            dropdownContent.innerHTML = ''
+            li.innerHTML = ingredient;
+            li.classList.add('ingredientElement')
+            ul.appendChild(li);
+        }
     })
 
     dropdownContent.appendChild(ul);
@@ -84,12 +78,13 @@ function displayUstensilsList(recipesBook) {
 }
 
 //display the founded recipes in the DOM
-function displaySearchRecipe(recipeBook) {
+function searchBar(recipeBook) {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
         const results = recipeBook.doSearch(document.getElementById('rechercher').value);
         showRecipe(recipeBook, results);
 
     })
+    return document.getElementById('rechercher').value;
 }
 
 
@@ -103,33 +98,33 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
         const filterContainer = document.getElementById('filterContainer');
         filteredFilters.forEach(fltr => {
             if (fltr === fltr.replace(/s$/, '')) {
-                            const li = document.createElement('li');
-                            dropdownContent.innerHTML = ''
-                            li.innerHTML = fltr;
-                            ul.appendChild(li);
-                            //faire une fonction à part
-                            li.addEventListener('click', (e) => {
-                                const pinnedFilter = document.createElement('div');
-                                pinnedFilter.classList.add('pinnedFilter');
-                                pinnedFilter.id = fltr;
-                                const span = document.createElement('span');
-                                //span.id = fltr;
-                                const close = document.createElement('i')
-                                close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
-                                close.onclick = () => {
-                                    this.synchronizeFilters(selectedFilters, pinnedFilter.id);
-                                    document.getElementById(pinnedFilter.id).remove();
-                                }
-                                pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
-                                span.innerHTML = fltr;
-                                filterContainer.appendChild(pinnedFilter)
-                                pinnedFilter.appendChild(span);
-                                pinnedFilter.appendChild(close);
-                                selectedFilters.push(fltr);
-                                searchWithFilters(recipesBook, selectedFilters);
+                const li = document.createElement('li');
+                dropdownContent.innerHTML = ''
+                li.innerHTML = fltr;
+                ul.appendChild(li);
+                //faire une fonction à part
+                li.addEventListener('click', (e) => {
+                    const pinnedFilter = document.createElement('div');
+                    pinnedFilter.classList.add('pinnedFilter');
+                    pinnedFilter.id = fltr;
+                    const span = document.createElement('span');
+                    //span.id = fltr;
+                    const close = document.createElement('i')
+                    close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+                    close.onclick = () => {
+                        this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook);
+                        document.getElementById(pinnedFilter.id).remove();
+                    }
+                    pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
+                    span.innerHTML = fltr;
+                    filterContainer.appendChild(pinnedFilter)
+                    pinnedFilter.appendChild(span);
+                    pinnedFilter.appendChild(close);
+                    selectedFilters.push(fltr);
+                    searchWithFilters(recipesBook, selectedFilters);
 
-                            })
-                        }
+                })
+            }
         })
 
 
@@ -140,20 +135,29 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
 }
 
 //if the user clicks on the remove croce, it will be removed from the list of selected filters
-function synchronizeFilters(selectedFilters, id) {
+function synchronizeFilters(selectedFilters, id, recipesBook) {
     selectedFilters.splice(selectedFilters.indexOf(id), 1);
+    if (selectedFilters.length === 0) {
+        return showRecipe(recipesBook);
+    }
 }
 
 
 //display the recipe with required criteria
 function searchWithFilters(recipesBook, filters) {
+    //const searchBar = this.searchBar(recipesBook);
+    /*if (searchBar && filters) {
+        const results = recipesBook.doSearch(searchBar, filters);
+        showRecipe(recipesBook, results);
+    }*/
     if (document.getElementById('rechercher').value.length > 0) {
-        const results = recipesBook.doSearch(document.getElementById('rechercher').value);
+        const results = recipesBook.doSearch(document.getElementById('rechercher').value, filters);
         showRecipe(recipesBook, results);
     } else {
         const results = recipesBook.doSearch('', filters);
         return showRecipe(recipesBook, results);
     }
+
 }
 
 
@@ -198,10 +202,12 @@ function showRecipe(recipesBook, results = false) {
             } else if (ingredient.unit === '' || ingredient.unit === undefined) {
                 li.innerHTML = ingredient.quantity + ' ' + '<b>' + ingredient.ingredient + '</b> ';
             } else {
-                //if(ingredient.quantity > 1 && ingredient.unit.slice(-1) !== 's') li.innerHTML =  ingredient.quantity + ' ' + '<b>' + ingredient.ingredient + 's' + '</b> ' ;
                 // if(ingredient.quantity === 1 && ingredient.unit.slice(-1) === 's') li.innerHTML =  ingredient.quantity + ' ' + '<b>' + ingredient.unit.replace(/s$/, '') + '</b> ' ;
                 li.innerHTML = '<b>' + ingredient.ingredient + '</b>' + ' : ' + ingredient.quantity + ' ' + ToolsClass.shorterUnitOfMeasure(ingredient.unit);
             }
+
+            // add s to ingredient unit if quantity is > 1
+            //if(ingredient.quantity && ingredient.quantity > 1 ) li.innerHTML =  ingredient.quantity + ' ' + ToolsClass.shorterUnitOfMeasure(ingredient.unit) + '<b>' + ingredient.ingredient + 's' + '</b> ' ;
             listElement.appendChild(li);
             ingredients.appendChild(listElement);
             container.appendChild(ingredients)
@@ -240,9 +246,10 @@ async function init() {
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
-    displaySearchRecipe(recipesBook);
+    searchBar(recipesBook);
     showRecipe(recipesBook);
     //closeFilter();
+    await spellCheck(recipesBook);
 }
 
 

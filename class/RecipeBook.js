@@ -15,18 +15,21 @@ class RecipeBook
     doSearch(search, filters) {
         const results = this.findSearchBarResults(search);
         return this.filterResults(results, filters);
+
     }
 
     filterResults(recipes, filters) {
         //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
+            console.log(filters)
             filters.forEach(filter => {
+                console.log(filter)
                 recipes = this.doFilter(recipes, filter)
             })
+
+
         }
-        if(filters.length === 0) {
-            return this.recipes
-        }
+
         return recipes;
     }
 
@@ -35,6 +38,7 @@ class RecipeBook
             return this.recipes;
         }
         return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+
     }
 
 
@@ -44,17 +48,19 @@ class RecipeBook
         if (!recipes) {
             recipes = this.recipes;
         }
-        const forbiddenWords = ToolsClass.excludedWords();
+
         if (this.ingredientArray.includes(filter)) {
-            console.log(forbiddenWords.includes(filter))
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || forbiddenWords.includes(filter) === true))
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' ))
+
         }
         else if(this.applicanceArray.includes(filter)) {
             return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's'))
         }
         else if(this.ustensilsArray.includes(filter)) {
             return recipes.filter(recipe => recipe.ustensils.includes(filter) || recipe.ustensils.includes(filter + 's'))
+
         }
+
     }
 
     //sort array by ingredients
@@ -68,13 +74,16 @@ class RecipeBook
            recipe.ingredients.forEach(ingredientsRecipe =>
            {
                 ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
-                ingredientsArray = Array.from(ingredientSet)
-               const cleanedArray =  ToolsClass.sortArray(ingredientsArray)
-               return ToolsClass.removeDuplicates(cleanedArray)
+
            })
         })
-        return ToolsClass.noAccents(ingredientsArray)
+        ingredientsArray = Array.from(ingredientSet)
+        ToolsClass.sortArray(ingredientsArray)
+        ToolsClass.removeDuplicates(ingredientsArray)
+        ToolsClass.noAccents(ingredientsArray)
+        return ingredientsArray
     }
+
 
 
     //sort array by appliances
@@ -83,14 +92,15 @@ class RecipeBook
         let applianceArray = [];
         let applianceSet = new Set();
 
-        this.recipes.forEach(recipe =>
-        {
-            applianceSet.add(recipe.appliance.toLocaleLowerCase())
-            applianceArray = Array.from(applianceSet)
-            ToolsClass.sortArray(applianceArray)
-            ToolsClass.noAccents(applianceArray)
-            ToolsClass.removeDuplicates(applianceArray)
-        })
+       this.recipes.forEach(recipe =>
+       {
+           applianceSet.add(recipe.appliance.toLocaleLowerCase())
+
+       })
+        applianceArray = Array.from(applianceSet)
+        ToolsClass.sortArray(applianceArray)
+        ToolsClass.noAccents(applianceArray)
+        ToolsClass.removeDuplicates(applianceArray)
         return applianceArray
     }
 
@@ -106,6 +116,7 @@ class RecipeBook
                 ustentilsSet.add(ustensil.toLocaleLowerCase())
             })
         })
+
         ustentilsArray = Array.from(ustentilsSet)
         ToolsClass.sortArray(ustentilsArray)
         ToolsClass.noAccents(ustentilsArray)
