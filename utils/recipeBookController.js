@@ -30,7 +30,6 @@ function displayIngredientList(recipesBook) {
     ingredientList.forEach(ingredient => {
         //display only singular ingredients
         if (ingredient === ingredient.replace(/s$/, '')) {
-
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
             li.innerHTML = ingredient;
@@ -136,10 +135,14 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
 
 //if the user clicks on the remove croce, it will be removed from the list of selected filters
 function synchronizeFilters(selectedFilters, id, recipesBook) {
-    selectedFilters.splice(selectedFilters.indexOf(id), 1);
+    //if the user clicks on the remove croce, it will be removed from the list of selected filters
     if (selectedFilters.length === 0) {
         return showRecipe(recipesBook);
     }
+    selectedFilters.splice(selectedFilters.indexOf(id), 1);
+
+    return searchWithFilters(recipesBook, selectedFilters);
+
 }
 
 

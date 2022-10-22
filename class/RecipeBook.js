@@ -21,13 +21,10 @@ class RecipeBook
     filterResults(recipes, filters) {
         //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
-            console.log(filters)
             filters.forEach(filter => {
                 console.log(filter)
                 recipes = this.doFilter(recipes, filter)
             })
-
-
         }
 
         return recipes;
@@ -40,8 +37,6 @@ class RecipeBook
         return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 
     }
-
-
 
 
     doFilter(recipes = false, filter) {

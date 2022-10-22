@@ -25,6 +25,7 @@ nav form #rechercher {
   background-color: #E7E7E7;
   border: none;
   margin-top: 50px;
+  margin-left: 20px;
 }
 nav form span {
   padding-top: 50px;
@@ -50,6 +51,7 @@ nav .pinnedFilter .closeFilter {
   margin-top: 20px;
   display: flex;
   justify-content: flex-start;
+  margin-left: 25px;
 }
 .advanced__search__dropdown {
   margin-bottom: 10px;
@@ -82,7 +84,7 @@ nav .pinnedFilter .closeFilter {
 }
 .advanced__search__dropdown .icon {
   padding: 10px;
-  min-width: 40px;
+  width: 15px;
 }
 .advanced__search__dropdown__dropdown-content {
   padding: 5px;
@@ -121,7 +123,6 @@ nav .pinnedFilter .closeFilter {
   width: 380px;
   height: 364px;
   border-radius: 5px;
-  padding: 10px;
   cursor: pointer;
   background-color: #E7E7E7;
 }
@@ -146,6 +147,8 @@ nav .pinnedFilter .closeFilter {
   display: flex;
   align-items: center;
   font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 #recipeSection .card .container .ingredients {
   width: 50%;
