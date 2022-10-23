@@ -22,7 +22,7 @@ async function getFrenchDictionnary() {
 }
 
 // rewrite json array recipe by comparing each words with Francais.json file
-    async function spellCheck() {
+ /*  async function spellCheck() {
         let arrayRecipe = await getArrayRecipe();
         let arrayFrancais = await getFrenchDictionnary();
         for (let i = 0; i < arrayRecipe.length; i++) {
@@ -49,6 +49,6 @@ async function getFrenchDictionnary() {
                 }
             }
         }
-        return console.log(arrayRecipe);
-    }
+        return arrayRecipe;
+    } */
 

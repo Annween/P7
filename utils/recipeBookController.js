@@ -64,13 +64,13 @@ function displayUstensilsList(recipesBook) {
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
     ustensilsList.forEach(ustensils => {
-        if (ustensils === ustensils.replace(/s$/, '')) {
+
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
             li.innerHTML = ustensils;
             li.classList.add('ustentsilElement')
             ul.appendChild(li);
-        }
+
     })
 
     dropdownContent.appendChild(ul);
@@ -252,7 +252,7 @@ async function init() {
     searchBar(recipesBook);
     showRecipe(recipesBook);
     //closeFilter();
-    await spellCheck(recipesBook);
+    //await spellCheck(recipesBook);
 }
 
 

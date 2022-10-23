@@ -22,7 +22,6 @@ class RecipeBook
         //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
             filters.forEach(filter => {
-                console.log(filter)
                 recipes = this.doFilter(recipes, filter)
             })
         }
@@ -45,14 +44,14 @@ class RecipeBook
         }
 
         if (this.ingredientArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' ))
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
 
         }
         else if(this.applicanceArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's'))
+            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
         }
         else if(this.ustensilsArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ustensils.includes(filter) || recipe.ustensils.includes(filter + 's'))
+            return recipes.filter(recipe => recipe.ustensils === filter || recipe.ustensils === filter + 's' || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
 
         }
 
@@ -73,10 +72,10 @@ class RecipeBook
            })
         })
         ingredientsArray = Array.from(ingredientSet)
-        ToolsClass.sortArray(ingredientsArray)
-        ToolsClass.removeDuplicates(ingredientsArray)
-        ToolsClass.noAccents(ingredientsArray)
-        return ingredientsArray
+        const sortedArray =  ToolsClass.sortArray(ingredientsArray)
+        const noAccentsArray = ToolsClass.removeDuplicates(sortedArray)
+        return ToolsClass.noAccents(noAccentsArray)
+
     }
 
 
@@ -93,10 +92,9 @@ class RecipeBook
 
        })
         applianceArray = Array.from(applianceSet)
-        ToolsClass.sortArray(applianceArray)
-        ToolsClass.noAccents(applianceArray)
-        ToolsClass.removeDuplicates(applianceArray)
-        return applianceArray
+       const sortedArray =  ToolsClass.sortArray(applianceArray)
+       const noAccentsArray = ToolsClass.noAccents(sortedArray)
+        return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
     //sort array by ustensils
@@ -113,10 +111,9 @@ class RecipeBook
         })
 
         ustentilsArray = Array.from(ustentilsSet)
-        ToolsClass.sortArray(ustentilsArray)
-        ToolsClass.noAccents(ustentilsArray)
-        ToolsClass.removeDuplicates(ustentilsArray)
-        return ustentilsArray
+        const sortedArray = ToolsClass.sortArray(ustentilsArray)
+        const noAccentsArray = ToolsClass.noAccents(sortedArray)
+        return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
 
