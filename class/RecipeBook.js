@@ -11,7 +11,7 @@ class RecipeBook
         return this.recipes;
     }
 
-
+    //initalize the search (on searchbar or on filter or both)
     doSearch(search, filters) {
         const results = this.findSearchBarResults(search);
         return this.filterResults(results, filters);
@@ -19,7 +19,6 @@ class RecipeBook
     }
 
     filterResults(recipes, filters) {
-        //il faut boucler sur les filtres
         if(Array.isArray(filters)) {
             filters.forEach(filter => {
                 recipes = this.doFilter(recipes, filter)
@@ -57,7 +56,7 @@ class RecipeBook
 
     }
 
-    //sort array by ingredients
+    //sorting array by ingredients
     getAllIngredientsRecipe() {
 
        let ingredientsArray = [];
@@ -80,7 +79,7 @@ class RecipeBook
 
 
 
-    //sort array by appliances
+    //sorting array by appliances
     getAllAppliancesRecipe()
     {
         let applianceArray = [];
@@ -89,15 +88,23 @@ class RecipeBook
        this.recipes.forEach(recipe =>
        {
            applianceSet.add(recipe.appliance.toLocaleLowerCase())
-
+           //remove . from appliance name
+              applianceSet.forEach(appliance => {
+                    if(appliance.includes('.')) {
+                        applianceSet.delete(appliance)
+                        applianceSet.add(appliance.replace('.', ''))
+                    }
+              }
+                )
        })
         applianceArray = Array.from(applianceSet)
+
        const sortedArray =  ToolsClass.sortArray(applianceArray)
        const noAccentsArray = ToolsClass.noAccents(sortedArray)
         return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
-    //sort array by ustensils
+    //sorting array by ustensils
     getUstentilsRecipe()
     {
         let ustentilsArray;
@@ -117,8 +124,7 @@ class RecipeBook
     }
 
 
-
-    //faire un switch case
+    //search among filters when typing in a filter searchbar
      searchFilter(elementId) {
          switch (elementId.id) {
              case 'ingredient':
