@@ -33,15 +33,18 @@ class RecipeBook
 
     //replace by for loop
     findSearchBarResults(search) {
+        if(!search) {
+            return this.recipes;
+        }
+        const array = [];
         for (let i = 0; i < this.recipes.length; i++) {
             if (this.recipes[i].name.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
-                return this.recipes[i];
+                 array.push(this.recipes[i]);
             }
+
         }
+        return array;
     }
-
-
-
 
     doFilter(recipes = false, filter) {
         if (!recipes) {
@@ -49,87 +52,88 @@ class RecipeBook
         }
 
         if (this.ingredientArray.includes(filter)) {
-            for (let i = 0; i < recipes.length; i++) {
-                for (let j = 0; j < recipes[i].ingredients.length; j++) {
-                    if (recipes[i].ingredients[j].ingredient.toLocaleLowerCase() === filter || recipes[i].ingredients[j].ingredient.toLocaleLowerCase() === filter + 's') {
-                        return recipes[i]
-                    }
-                }
-            }
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
+
         }
         else if(this.applicanceArray.includes(filter)) {
-            for (let i = 0; i < recipes.length; i++) {
-                if (recipes[i].appliance.toLocaleLowerCase().includes(filter)) {
-                    return recipes[i]
-                }
-
-            }
+            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
         }
         else if(this.ustensilsArray.includes(filter)) {
-            for (let i = 0; i < recipes.length; i++) {
-                if (recipes[i].ustensils.includes(filter)) {
-                    return recipes[i]
-                }
-            }
+            return recipes.filter(recipe => recipe.ustensils === filter || recipe.ustensils === filter + 's' || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
+
         }
 
     }
 
-    //sort array by ingredients
+    //sorting array by ingredients
     getAllIngredientsRecipe() {
 
         let ingredientsArray = [];
         let ingredientSet = new Set();
 
-        for (let i = 0; i < this.recipes.length; i++) {
-            for (let j = 0; j < this.recipes[i].ingredients.length; j++) {
-                ingredientSet.add(this.recipes[i].ingredients[j].ingredient.toLocaleLowerCase())
-            }
-        }
+        this.recipes.forEach(recipe =>
+        {
+            recipe.ingredients.forEach(ingredientsRecipe =>
+            {
+                ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
+
+            })
+        })
         ingredientsArray = Array.from(ingredientSet)
-        ToolsClass.sortArray(ingredientsArray)
-        ToolsClass.removeDuplicates(ingredientsArray)
-        ToolsClass.noAccents(ingredientsArray)
-        return ingredientsArray
+        const sortedArray =  ToolsClass.sortArray(ingredientsArray)
+        const noAccentsArray = ToolsClass.removeDuplicates(sortedArray)
+        return ToolsClass.noAccents(noAccentsArray)
+
     }
 
 
-    //sort array by appliances
+
+    //sorting array by appliances
     getAllAppliancesRecipe()
     {
         let applianceArray = [];
         let applianceSet = new Set();
 
-        for (let i = 0; i < this.recipes.length; i++) {
-            applianceSet.add(this.recipes[i].appliance.toLocaleLowerCase())
-        }
+        this.recipes.forEach(recipe =>
+        {
+            applianceSet.add(recipe.appliance.toLocaleLowerCase())
+            //remove . from appliance name
+            applianceSet.forEach(appliance => {
+                    if(appliance.includes('.')) {
+                        applianceSet.delete(appliance)
+                        applianceSet.add(appliance.replace('.', ''))
+                    }
+                }
+            )
+        })
         applianceArray = Array.from(applianceSet)
-        ToolsClass.sortArray(applianceArray)
-        ToolsClass.noAccents(applianceArray)
-        ToolsClass.removeDuplicates(applianceArray)
-        return applianceArray
+
+        const sortedArray =  ToolsClass.sortArray(applianceArray)
+        const noAccentsArray = ToolsClass.noAccents(sortedArray)
+        return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
-    //sort array by ustensils
+    //sorting array by ustensils
     getUstentilsRecipe()
     {
         let ustentilsArray;
         let ustentilsSet = new Set();
-        for (const recipe of this.recipes) {
-            for (const ustensil of recipe.ustensils) {
+        this.recipes.forEach(recipe =>
+        {
+            recipe.ustensils.forEach(ustensil =>
+            {
                 ustentilsSet.add(ustensil.toLocaleLowerCase())
-            }
-        }
+            })
+        })
+
         ustentilsArray = Array.from(ustentilsSet)
-        ToolsClass.sortArray(ustentilsArray)
-        ToolsClass.noAccents(ustentilsArray)
-        ToolsClass.removeDuplicates(ustentilsArray)
-        return ustentilsArray
+        const sortedArray = ToolsClass.sortArray(ustentilsArray)
+        const noAccentsArray = ToolsClass.noAccents(sortedArray)
+        return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
 
-
-    //faire un switch case
+    //search among filters when typing in a filter searchbar
     searchFilter(elementId) {
         switch (elementId.id) {
             case 'ingredient':
@@ -141,8 +145,6 @@ class RecipeBook
         }
 
     }
-
-
 
 }
 
