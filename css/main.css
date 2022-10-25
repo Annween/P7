@@ -36,6 +36,7 @@ nav #filterContainer {
   display: flex;
   justify-content: flex-start;
   margin-top: 20px;
+  margin-left: 25px;
 }
 nav .pinnedFilter {
   display: none;

@@ -77,14 +77,14 @@ function displayUstensilsList(recipesBook) {
 }
 
 //display the founded recipes in the DOM
-function searchBar(recipeBook) {
+/*function searchBar(recipeBook) {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
         const results = recipeBook.doSearch(document.getElementById('rechercher').value);
         showRecipe(recipeBook, results);
 
     })
     return document.getElementById('rechercher').value;
-}
+}*/
 
 
 //display content of search filter
@@ -111,7 +111,7 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
                     const close = document.createElement('i')
                     close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
                     close.onclick = () => {
-                        this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook);
+                        this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
                         document.getElementById(pinnedFilter.id).remove();
                     }
                     pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
@@ -134,32 +134,39 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
 }
 
 //if the user clicks on the remove croce, it will be removed from the list of selected filters
-function synchronizeFilters(selectedFilters, id, recipesBook) {
+function synchronizeFilters(selectedFilters, id, recipesBook, searchBar) {
     //if the user clicks on the remove croce, it will be removed from the list of selected filters
-    if (selectedFilters.length === 0) {
+    if (selectedFilters.length === 0 && searchBar === '') {
         return showRecipe(recipesBook);
     }
+
     selectedFilters.splice(selectedFilters.indexOf(id), 1);
 
-    return searchWithFilters(recipesBook, selectedFilters);
+    return searchWithFilters(recipesBook, selectedFilters, searchBar);
 
 }
 
 
 //display the recipe with required criteria
-function searchWithFilters(recipesBook, filters) {
-    //const searchBar = this.searchBar(recipesBook);
-    /*if (searchBar && filters) {
+function searchWithFilters(recipesBook, filters, searchBar = '') {
+
+    document.getElementById('rechercher').addEventListener('keyup', ev => {
+         searchBar = document.getElementById('rechercher').value;
         const results = recipesBook.doSearch(searchBar, filters);
         showRecipe(recipesBook, results);
-    }*/
-    if (document.getElementById('rechercher').value.length > 0) {
+        return console.log(searchBar);
+    })
+    const results = recipesBook.doSearch(searchBar, filters);
+    showRecipe(recipesBook, results);
+
+return searchBar;
+   /* if (document.getElementById('rechercher').value.length > 0) {
         const results = recipesBook.doSearch(document.getElementById('rechercher').value, filters);
         showRecipe(recipesBook, results);
     } else {
         const results = recipesBook.doSearch('', filters);
         return showRecipe(recipesBook, results);
-    }
+    }*/
 
 }
 
@@ -249,10 +256,9 @@ async function init() {
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
-    searchBar(recipesBook);
+    //searchBar(recipesBook);
     showRecipe(recipesBook);
-    //closeFilter();
-    //await spellCheck(recipesBook);
+
 }
 
 
