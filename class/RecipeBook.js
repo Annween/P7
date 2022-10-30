@@ -37,17 +37,21 @@ class RecipeBook
             return this.recipes;
         }
         const results = [];
+        const array = [];
         for (let i = 0; i < this.recipes.length; i++) {
-            const ingredients = this.recipes[i].ingredients;
-            if (this.recipes[i].name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || this.recipes[i].description.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
-                for (let j = 0; j < ingredients.length; j++) {
-                    if(ingredients[j].ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
-                        results.push(this.recipes[i]);
-                    }
+            const recipe = this.recipes[i];
+            if (recipe.name.toLocaleLowerCase().includes(search) || recipe.description.toLocaleLowerCase().includes(search)) {
+                results.push(recipe);
+            }
+            for (let j = 0; j < recipe.ingredients.length; j++) {
+                const ingredient = recipe.ingredients[j];
+                if (ingredient.ingredient.toLocaleLowerCase().includes(search)) {
+                    array.push(recipe);
                 }
             }
+
         }
-        return results;
+        return [...new Set([...results, ...array])];
     }
 
     doFilter(recipes = false, filter) {
@@ -63,7 +67,7 @@ class RecipeBook
             return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
         }
         else if(this.ustensilsArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ustensils === filter || recipe.ustensils === filter + 's' || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.ustensils.normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
+            return recipes.filter(recipe => recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().includes(filter) || ustensil.toLocaleLowerCase().includes(filter + 's') || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
 
         }
 
