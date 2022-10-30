@@ -5,9 +5,9 @@ class ToolsClass {
     }
 
     //remove plural from string
-   /* static removePlural(str) {
-        return str.replace(/s$/, '');
-    }*/
+    /* static removePlural(str) {
+         return str.replace(/s$/, '');
+     }*/
 
     //remove plural from array
     static removePlural(array) {
@@ -39,7 +39,6 @@ class ToolsClass {
     }
 
 
-
     //create function that removes accents
     static noAccents(array) {
         return array.map(element => element.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
@@ -52,7 +51,7 @@ class ToolsClass {
 
     //sorting array by alphabetical order
     static sortArray(array) {
-       return array.sort(function (a, b) {
+        return array.sort(function (a, b) {
             return a.localeCompare(b);
         })
     }

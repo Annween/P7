@@ -1,5 +1,4 @@
-class RecipeBook
-{
+class RecipeBook {
     constructor(recipes) {
         this.recipes = recipes;
         this.ingredientArray = this.getAllIngredientsRecipe();
@@ -19,7 +18,7 @@ class RecipeBook
     }
 
     filterResults(recipes, filters) {
-        if(Array.isArray(filters)) {
+        if (Array.isArray(filters)) {
             filters.forEach(filter => {
                 recipes = this.doFilter(recipes, filter)
             })
@@ -29,11 +28,11 @@ class RecipeBook
     }
 
     findSearchBarResults(search) {
-        if (!search){
+        if (!search) {
             return this.recipes;
         }
 
-        return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||  recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+        return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
 
     }
 
@@ -44,15 +43,13 @@ class RecipeBook
         }
 
         if (this.ingredientArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
+            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter + 's'))
 
-        }
-        else if(this.applicanceArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
-        }
-        else if(this.ustensilsArray.includes(filter)) {
+        } else if (this.applicanceArray.includes(filter)) {
+            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter + 's')
+        } else if (this.ustensilsArray.includes(filter)) {
 
-            return recipes.filter(recipe => recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().includes(filter) || ustensil.toLocaleLowerCase().includes(filter + 's') || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
+            return recipes.filter(recipe => recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().includes(filter) || ustensil.toLocaleLowerCase().includes(filter + 's') || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter + 's'))
 
         }
 
@@ -61,19 +58,17 @@ class RecipeBook
     //sorting array by ingredients
     getAllIngredientsRecipe() {
 
-       let ingredientsArray = [];
+        let ingredientsArray = [];
         let ingredientSet = new Set();
 
-        this.recipes.forEach(recipe =>
-        {
-           recipe.ingredients.forEach(ingredientsRecipe =>
-           {
+        this.recipes.forEach(recipe => {
+            recipe.ingredients.forEach(ingredientsRecipe => {
                 ingredientSet.add(ingredientsRecipe.ingredient.toLocaleLowerCase())
 
-           })
+            })
         })
         ingredientsArray = Array.from(ingredientSet)
-        const sortedArray =  ToolsClass.sortArray(ingredientsArray)
+        const sortedArray = ToolsClass.sortArray(ingredientsArray)
         //const noPlural = ToolsClass.removePlural(sortedArray)
         const noAccentsArray = ToolsClass.removeDuplicates(sortedArray)
         return ToolsClass.noAccents(noAccentsArray)
@@ -81,42 +76,36 @@ class RecipeBook
     }
 
 
-
     //sorting array by appliances
-    getAllAppliancesRecipe()
-    {
+    getAllAppliancesRecipe() {
         let applianceArray = [];
         let applianceSet = new Set();
 
-       this.recipes.forEach(recipe =>
-       {
-           applianceSet.add(recipe.appliance.toLocaleLowerCase())
-           //remove . from appliance name
-              applianceSet.forEach(appliance => {
-                    if(appliance.includes('.')) {
+        this.recipes.forEach(recipe => {
+            applianceSet.add(recipe.appliance.toLocaleLowerCase())
+            //remove . from appliance name
+            applianceSet.forEach(appliance => {
+                    if (appliance.includes('.')) {
                         applianceSet.delete(appliance)
                         applianceSet.add(appliance.replace('.', ''))
                     }
-              }
-                )
-       })
+                }
+            )
+        })
         applianceArray = Array.from(applianceSet)
 
-       const sortedArray =  ToolsClass.sortArray(applianceArray)
-       const noAccentsArray = ToolsClass.noAccents(sortedArray)
+        const sortedArray = ToolsClass.sortArray(applianceArray)
+        const noAccentsArray = ToolsClass.noAccents(sortedArray)
         //const noPlural = ToolsClass.removePlural(noAccentsArray)
         return ToolsClass.removeDuplicates(noAccentsArray)
     }
 
     //sorting array by ustensils
-    getUstentilsRecipe()
-    {
+    getUstentilsRecipe() {
         let ustentilsArray;
         let ustentilsSet = new Set();
-        this.recipes.forEach(recipe =>
-        {
-            recipe.ustensils.forEach(ustensil =>
-            {
+        this.recipes.forEach(recipe => {
+            recipe.ustensils.forEach(ustensil => {
                 ustentilsSet.add(ustensil.toLocaleLowerCase())
             })
         })
@@ -130,25 +119,18 @@ class RecipeBook
 
 
     //search among filters when typing in a filter searchbar
-     searchFilter(elementId, searchInput = '') {
-         switch (elementId.id) {
-             case 'ingredient':
-                 return this.ingredientArray.filter(item => item.includes(elementId.value))
-             case 'appareils':
-                 return this.applicanceArray.filter(item => item.includes(elementId.value))
-             case 'ustensiles':
-                 return this.ustensilsArray.filter(item =>  item.includes(elementId.value))
+    searchFilter(elementId, searchInput = '') {
+        switch (elementId.id) {
+            case 'ingredient':
+                return this.ingredientArray.filter(item => item.includes(elementId.value))
+            case 'appareils':
+                return this.applicanceArray.filter(item => item.includes(elementId.value))
+            case 'ustensiles':
+                return this.ustensilsArray.filter(item => item.includes(elementId.value))
 
-             case 'ingredient' && searchInput !== '':
-                 return this.ingredientArray.filter(item => item.includes(searchInput))
-             case 'appareils' && searchInput !== '':
-                 return this.applicanceArray.filter(item => item.includes(searchInput))
-             case 'ustensiles' && searchInput !== '':
-                 return this.ustensilsArray.filter(item =>  item.includes(searchInput))
-         }
+        }
 
-     }
-
+    }
 
 
 }
