@@ -1,12 +1,17 @@
 class ToolsClass {
 
     static removeDuplicates(array) {
-        return array.filter(element => element === element)
+        return array.filter(element => element === element || (element === element.replace(/s$/, '')))
     }
 
     //remove plural from string
-    static removePlural(str) {
+   /* static removePlural(str) {
         return str.replace(/s$/, '');
+    }*/
+
+    //remove plural from array
+    static removePlural(array) {
+        return array.map(element => element.replace(/s$/, ''))
     }
 
     //shorter unit of measure

@@ -20,23 +20,77 @@ async function getToolsClass() {
     return new ToolsClass();
 }
 
+//display the founded recipes in the DOM
+function searchBar(recipesBook) {
+    let ingredientList = [];
+    document.getElementById('rechercher').addEventListener('keyup', ev => {
+        const results = recipesBook.doSearch(document.getElementById('rechercher').value);
+
+       results.forEach(result => {
+           //loop through the ingredients of each recipe and push them in the ingredientList array
+           result.ingredients.forEach(ingredient => {
+               ingredientList.push(ingredient.ingredient);
+           })
+
+           console.log(ingredientList);
+
+           displayIngredientList(recipesBook, ingredientList);
+
+
+       })
+
+
+        showRecipe(recipesBook, results);
+
+
+    })
+    return document.getElementById('rechercher').value;
+}
+
 //show IngredientList in DOM
-function displayIngredientList(recipesBook) {
+function displayIngredientList(recipesBook, list = []) {
 
-    const ingredientList = recipesBook.getAllIngredientsRecipe();
+    let ingredientList = recipesBook.getAllIngredientsRecipe();
 
+    if (list.length > 0) {
+        ingredientList = list;
+    }
     const dropdownContent = document.getElementById('ingredientsContent');
     const ul = document.createElement('ul');
     ingredientList.forEach(ingredient => {
         //display only singular ingredients
-        if (ingredient === ingredient.replace(/s$/, '')) {
+        //if (ingredient === ingredient.replace(/s$/, '')) {
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
             li.innerHTML = ingredient;
             li.classList.add('ingredientElement')
             ul.appendChild(li);
-        }
+        //}
+
+        li.addEventListener('click', (e) => {
+            const pinnedFilter = document.createElement('div');
+            pinnedFilter.classList.add('pinnedFilter');
+            pinnedFilter.id = ingredient;
+            const span = document.createElement('span');
+            //span.id = fltr;
+            const close = document.createElement('i')
+            close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+            close.onclick = () => {
+                this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
+                document.getElementById(pinnedFilter.id).remove();
+            }
+            pinnedFilter.style = 'display: flex; background-color: #3282F7; justify-content: space-between; align-items: center; margin-right: 10px'
+            span.innerHTML = ingredient;
+            filterContainer.appendChild(pinnedFilter)
+            pinnedFilter.appendChild(span);
+            pinnedFilter.appendChild(close);
+            selectedFilters.push(ingredient);
+            searchWithFilters(recipesBook, selectedFilters);
+
+        })
     })
+
+
 
     dropdownContent.appendChild(ul);
 }
@@ -52,7 +106,31 @@ function displayApplicanceList(recipesBook) {
             li.innerHTML = applicance;
             li.classList.add('applianceElement')
             ul.appendChild(li);
+
+            li.addEventListener('click', (e) => {
+                const pinnedFilter = document.createElement('div');
+                pinnedFilter.classList.add('pinnedFilter');
+                pinnedFilter.id = applicance;
+                const span = document.createElement('span');
+                //span.id = fltr;
+                const close = document.createElement('i')
+                close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+                close.onclick = () => {
+                    this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
+                    document.getElementById(pinnedFilter.id).remove();
+                }
+                pinnedFilter.style = 'display: flex; background-color: #68D9A4; justify-content: space-between; align-items: center; margin-right: 10px'
+                span.innerHTML = applicance;
+                filterContainer.appendChild(pinnedFilter)
+                pinnedFilter.appendChild(span);
+                pinnedFilter.appendChild(close);
+                selectedFilters.push(applicance);
+                searchWithFilters(recipesBook, selectedFilters);
+
+            })
         }
+
+
     })
 
     dropdownContent.appendChild(ul);
@@ -63,6 +141,7 @@ function displayUstensilsList(recipesBook) {
 
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
+    const filterContainer = document.getElementById('filterContainer');
     ustensilsList.forEach(ustensils => {
 
             const li = document.createElement('li');
@@ -71,29 +150,42 @@ function displayUstensilsList(recipesBook) {
             li.classList.add('ustentsilElement')
             ul.appendChild(li);
 
-    })
+        li.addEventListener('click', (e) => {
+            const pinnedFilter = document.createElement('div');
+            pinnedFilter.classList.add('pinnedFilter');
+            pinnedFilter.id = ustensils;
+            const span = document.createElement('span');
+            //span.id = fltr;
+            const close = document.createElement('i')
+            close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+            close.onclick = () => {
+                this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
+                document.getElementById(pinnedFilter.id).remove();
+            }
+            pinnedFilter.style = 'display: flex; background-color: #ED6454; justify-content: space-between; align-items: center; margin-right: 10px'
+            span.innerHTML = ustensils;
+            filterContainer.appendChild(pinnedFilter)
+            pinnedFilter.appendChild(span);
+            pinnedFilter.appendChild(close);
+            selectedFilters.push(ustensils);
+            searchWithFilters(recipesBook, selectedFilters);
 
+        })
+
+    })
+    
     dropdownContent.appendChild(ul);
 }
 
-//display the founded recipes in the DOM
-/*function searchBar(recipeBook) {
-    document.getElementById('rechercher').addEventListener('keyup', ev => {
-        const results = recipeBook.doSearch(document.getElementById('rechercher').value);
-        showRecipe(recipeBook, results);
-
-    })
-    return document.getElementById('rechercher').value;
-}*/
 
 
-//display content of search filter
 function displayFilterContent(recipesBook, elementId, dropdownId, color) {
     document.getElementById(elementId).addEventListener('keyup', ev => {
         const dropdownContent = document.getElementById(dropdownId);
         const ul = document.createElement('ul');
-        //search among filters when typing in a filter searchbar
         const filteredFilters = recipesBook.searchFilter(document.getElementById(elementId));
+        //search among filters when typing in a filter searchbar
+
         const filterContainer = document.getElementById('filterContainer');
         filteredFilters.forEach(fltr => {
             if (fltr === fltr.replace(/s$/, '')) {
@@ -131,7 +223,65 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
         dropdownContent.appendChild(ul);
     })
 
+
 }
+
+
+
+
+
+
+//display content of search filter
+//function displayFilterContent(recipesBook, elementId, dropdownId, color) {
+//
+//    document.getElementById(elementId).addEventListener('keyup', ev => {
+//
+//        //search among filters when typing in a filter searchbar
+//        const filteredFilters = recipesBook.searchFilter(document.getElementById(elementId));
+//        //display the filtered filters in the DOM
+//        showFiltersList(recipesBook,filteredFilters, elementId, dropdownId, color);
+//    })
+//
+//
+//
+//}
+//
+//function showFiltersList(recipesBook,filteredFilters, elementId, dropdownId, color) {
+//    const filterContainer = document.getElementById('filterContainer');
+//    const dropdownContent = document.getElementById(dropdownId);
+//    const ul = document.createElement('ul');
+//    filteredFilters.forEach(fltr => {
+//        const li = document.createElement('li');
+//        dropdownContent.innerHTML = ''
+//        li.innerHTML = fltr;
+//        ul.appendChild(li);
+//        //faire une fonction à part
+//        li.addEventListener('click', (e) => {
+//            const pinnedFilter = document.createElement('div');
+//            pinnedFilter.classList.add('pinnedFilter');
+//            pinnedFilter.id = fltr;
+//            const span = document.createElement('span');
+//            //span.id = fltr;
+//            const close = document.createElement('i')
+//            close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
+//            close.onclick = () => {
+//                this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
+//                document.getElementById(pinnedFilter.id).remove();
+//            }
+//            pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
+//            span.innerHTML = fltr;
+//            filterContainer.appendChild(pinnedFilter)
+//            pinnedFilter.appendChild(span);
+//            pinnedFilter.appendChild(close);
+//            selectedFilters.push(fltr);
+//            searchWithFilters(recipesBook, selectedFilters);
+//
+//        })
+//
+//        document.querySelector('nav').appendChild(filterContainer);
+//        dropdownContent.appendChild(ul);
+//    })
+//}
 
 //if the user clicks on the remove croce, it will be removed from the list of selected filters
 function synchronizeFilters(selectedFilters, id, recipesBook, searchBar) {
@@ -154,7 +304,7 @@ function searchWithFilters(recipesBook, filters, searchBar = '') {
          searchBar = document.getElementById('rechercher').value;
         const results = recipesBook.doSearch(searchBar, filters);
         showRecipe(recipesBook, results);
-        return console.log(searchBar);
+        return searchBar;
     })
     const results = recipesBook.doSearch(searchBar, filters);
     showRecipe(recipesBook, results);
@@ -256,7 +406,7 @@ async function init() {
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
-    //searchBar(recipesBook);
+    searchBar(recipesBook);
     showRecipe(recipesBook);
 
 }
