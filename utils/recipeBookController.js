@@ -26,26 +26,25 @@ function searchBar(recipesBook) {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
         const results = recipesBook.doSearch(document.getElementById('rechercher').value);
         showRecipe(recipesBook, results);
-        synchronizeSearchBar(recipesBook, results);
+        synchronizeSearchBar(recipesBook, results, document.getElementById('rechercher').value);
     })
 
 
     return document.getElementById('rechercher').value;
 }
 
-function synchronizeSearchBar(recipesBook, results = []) {
+function synchronizeSearchBar(recipesBook, results = [], searchValue) {
     let ingredientList = [];
     let applianceList = [];
     let utensilList = [];
-    const searchBar = document.getElementById('rechercher').value;
     //find the recipes that match the search bar
-    //const results = recipesBook.doSearch(searchBar);
     //display the recipes that match the search bar
     results.forEach(result => {
         //loop through the ingredients of each recipe and push them in the ingredientList array
         result.ingredients.forEach(ingredient => {
             const ingredientName = ingredient.ingredient.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
             ingredientList.push(ingredientName.toLocaleLowerCase());
+
         })
 
         //loop through the appliances of each recipe and push them in the applianceList array
@@ -59,16 +58,16 @@ function synchronizeSearchBar(recipesBook, results = []) {
         })
 
 
-        displayIngredientList(recipesBook, ingredientList);
-        displayUstensilsList(recipesBook, utensilList);
-        displayApplicanceList(recipesBook, applianceList);
+        displayIngredientList(recipesBook, ingredientList, searchValue);
+        displayUstensilsList(recipesBook, utensilList, searchValue);
+        displayApplicanceList(recipesBook, applianceList, searchValue);
 
     })
 
 }
 
 //show IngredientList in DOM
-function displayIngredientList(recipesBook, list = []) {
+function displayIngredientList(recipesBook, list = [], searchValue = '') {
 
     let ingredientList = recipesBook.getAllIngredientsRecipe();
 
@@ -76,10 +75,11 @@ function displayIngredientList(recipesBook, list = []) {
         ingredientList = list;
     }
 
-
     const dropdownContent = document.getElementById('ingredientsContent');
     const ul = document.createElement('ul');
-    ingredientList.forEach(ingredient => {
+    const cleanList = [...new Set(ingredientList)];
+
+    cleanList.forEach(ingredient => {
         //display only singular ingredients
         //if (ingredient === ingredient.replace(/s$/, '')) {
             const li = document.createElement('li');
@@ -107,6 +107,10 @@ function displayIngredientList(recipesBook, list = []) {
             pinnedFilter.appendChild(span);
             pinnedFilter.appendChild(close);
             selectedFilters.push(ingredient);
+            if(searchValue !== '')
+            {
+                return searchWithFilters(recipesBook, selectedFilters, searchValue);
+            }
             searchWithFilters(recipesBook, selectedFilters);
 
         })
@@ -115,7 +119,7 @@ function displayIngredientList(recipesBook, list = []) {
     dropdownContent.appendChild(ul);
 }
 
-function displayApplicanceList(recipesBook, list = []) {
+function displayApplicanceList(recipesBook, list = [], searchValue = '') {
     let applianceList = recipesBook.getAllAppliancesRecipe();
 
     if (list.length > 0) {
@@ -124,7 +128,8 @@ function displayApplicanceList(recipesBook, list = []) {
 
     const dropdownContent = document.getElementById('appliancesContent');
     const ul = document.createElement('ul');
-    applianceList.forEach(applicance => {
+    const cleanList = [...new Set(applianceList)];
+    cleanList.forEach(applicance => {
         if (applicance === applicance.replace(/s$/, '')) {
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
@@ -150,6 +155,10 @@ function displayApplicanceList(recipesBook, list = []) {
                 pinnedFilter.appendChild(span);
                 pinnedFilter.appendChild(close);
                 selectedFilters.push(applicance);
+                if(searchValue !== '')
+                {
+                    return searchWithFilters(recipesBook, selectedFilters, searchValue);
+                }
                 searchWithFilters(recipesBook, selectedFilters);
 
             })
@@ -161,7 +170,7 @@ function displayApplicanceList(recipesBook, list = []) {
     dropdownContent.appendChild(ul);
 }
 
-function displayUstensilsList(recipesBook, list = []) {
+function displayUstensilsList(recipesBook, list = [], searchValue = '') {
     let ustensilsList = recipesBook.getUstentilsRecipe();
 
     if (list.length > 0) {
@@ -171,7 +180,8 @@ function displayUstensilsList(recipesBook, list = []) {
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
     const filterContainer = document.getElementById('filterContainer');
-    ustensilsList.forEach(ustensils => {
+    const cleanList = [...new Set(ustensilsList)];
+    cleanList.forEach(ustensils => {
 
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
@@ -197,6 +207,10 @@ function displayUstensilsList(recipesBook, list = []) {
             pinnedFilter.appendChild(span);
             pinnedFilter.appendChild(close);
             selectedFilters.push(ustensils);
+            if(searchValue !== '')
+            {
+                return searchWithFilters(recipesBook, selectedFilters, searchValue);
+            }
             searchWithFilters(recipesBook, selectedFilters);
 
         })
@@ -255,62 +269,6 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
 
 }
 
-
-
-
-
-
-//display content of search filter
-//function displayFilterContent(recipesBook, elementId, dropdownId, color) {
-//
-//    document.getElementById(elementId).addEventListener('keyup', ev => {
-//
-//        //search among filters when typing in a filter searchbar
-//        const filteredFilters = recipesBook.searchFilter(document.getElementById(elementId));
-//        //display the filtered filters in the DOM
-//        showFiltersList(recipesBook,filteredFilters, elementId, dropdownId, color);
-//    })
-//
-//
-//
-//}
-//
-//function showFiltersList(recipesBook,filteredFilters, elementId, dropdownId, color) {
-//    const filterContainer = document.getElementById('filterContainer');
-//    const dropdownContent = document.getElementById(dropdownId);
-//    const ul = document.createElement('ul');
-//    filteredFilters.forEach(fltr => {
-//        const li = document.createElement('li');
-//        dropdownContent.innerHTML = ''
-//        li.innerHTML = fltr;
-//        ul.appendChild(li);
-//        //faire une fonction à part
-//        li.addEventListener('click', (e) => {
-//            const pinnedFilter = document.createElement('div');
-//            pinnedFilter.classList.add('pinnedFilter');
-//            pinnedFilter.id = fltr;
-//            const span = document.createElement('span');
-//            //span.id = fltr;
-//            const close = document.createElement('i')
-//            close.classList.add('fa-regular', 'fa-times-circle', 'closeFilter');
-//            close.onclick = () => {
-//                this.synchronizeFilters(selectedFilters, pinnedFilter.id, recipesBook, document.getElementById('rechercher').value);
-//                document.getElementById(pinnedFilter.id).remove();
-//            }
-//            pinnedFilter.style = 'display: flex; background-color: #' + color + '; justify-content: space-between; align-items: center; margin-right: 10px'
-//            span.innerHTML = fltr;
-//            filterContainer.appendChild(pinnedFilter)
-//            pinnedFilter.appendChild(span);
-//            pinnedFilter.appendChild(close);
-//            selectedFilters.push(fltr);
-//            searchWithFilters(recipesBook, selectedFilters);
-//
-//        })
-//
-//        document.querySelector('nav').appendChild(filterContainer);
-//        dropdownContent.appendChild(ul);
-//    })
-//}
 
 //if the user clicks on the remove croce, it will be removed from the list of selected filters
 function synchronizeFilters(selectedFilters, id, recipesBook, searchBar) {
@@ -435,7 +393,7 @@ async function init() {
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
-    searchBar(recipesBook, toolsClass);
+    searchBar(recipesBook);
     showRecipe(recipesBook);
 
 }

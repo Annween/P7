@@ -33,12 +33,7 @@ class RecipeBook
             return this.recipes;
         }
 
-        //filter must sync each other (ingredients, appliances, ustensils)
-        //return console.log(this.recipes.filter(recipe => {
-        //    return recipe.name.toLocaleLowerCase().includes(search) || recipe.name.toLocaleLowerCase().includes(search + 's') || recipe.name.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search || recipe.name.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search + 's' || recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search) || ingredient.ingredient.toLocaleLowerCase().includes(search + 's') || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search + 's') || recipe.appliance.toLocaleLowerCase().includes(search) || recipe.appliance.toLocaleLowerCase().includes(search + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search + 's' || recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().includes(search) || ustensil.toLocaleLowerCase().includes(search + 's') || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === search + 's')
-        //}));
         return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||  recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
-
 
     }
 
