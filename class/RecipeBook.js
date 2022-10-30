@@ -36,14 +36,18 @@ class RecipeBook
         if(!search) {
             return this.recipes;
         }
-        const array = [];
+        const results = [];
         for (let i = 0; i < this.recipes.length; i++) {
-            if (this.recipes[i].name.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
-                 array.push(this.recipes[i]);
+            const ingredients = this.recipes[i].ingredients;
+            if (this.recipes[i].name.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || this.recipes[i].description.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+                for (let j = 0; j < ingredients.length; j++) {
+                    if(ingredients[j].ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+                        results.push(this.recipes[i]);
+                    }
+                }
             }
-
         }
-        return array;
+        return results;
     }
 
     doFilter(recipes = false, filter) {
