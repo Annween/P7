@@ -22,29 +22,49 @@ async function getToolsClass() {
 
 //display the founded recipes in the DOM
 function searchBar(recipesBook) {
-    let ingredientList = [];
+
     document.getElementById('rechercher').addEventListener('keyup', ev => {
         const results = recipesBook.doSearch(document.getElementById('rechercher').value);
-
-       results.forEach(result => {
-           //loop through the ingredients of each recipe and push them in the ingredientList array
-           result.ingredients.forEach(ingredient => {
-               ingredientList.push(ingredient.ingredient);
-           })
-
-           console.log(ingredientList);
-
-           displayIngredientList(recipesBook, ingredientList);
-
-
-       })
-
-
         showRecipe(recipesBook, results);
+        synchronizeSearchBar(recipesBook, results);
+    })
 
+
+    return document.getElementById('rechercher').value;
+}
+
+function synchronizeSearchBar(recipesBook, results = []) {
+    let ingredientList = [];
+    let applianceList = [];
+    let utensilList = [];
+    const searchBar = document.getElementById('rechercher').value;
+    //find the recipes that match the search bar
+    //const results = recipesBook.doSearch(searchBar);
+    //display the recipes that match the search bar
+    results.forEach(result => {
+        //loop through the ingredients of each recipe and push them in the ingredientList array
+        result.ingredients.forEach(ingredient => {
+            const ingredientName = ingredient.ingredient.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            ingredientList.push(ingredientName.toLocaleLowerCase());
+        })
+
+        //loop through the appliances of each recipe and push them in the applianceList array
+        const applianceName = result.appliance.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        applianceList.push(applianceName.toLocaleLowerCase());
+
+
+        result.ustensils.forEach(ustensile => {
+            const ustensileName = ustensile.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            utensilList.push(ustensileName.toLocaleLowerCase());
+        })
+
+
+        displayIngredientList(recipesBook, ingredientList);
+        displayUstensilsList(recipesBook, utensilList);
+        displayApplicanceList(recipesBook, applianceList);
 
     })
-    return document.getElementById('rechercher').value;
+
 }
 
 //show IngredientList in DOM
@@ -55,6 +75,8 @@ function displayIngredientList(recipesBook, list = []) {
     if (list.length > 0) {
         ingredientList = list;
     }
+
+
     const dropdownContent = document.getElementById('ingredientsContent');
     const ul = document.createElement('ul');
     ingredientList.forEach(ingredient => {
@@ -90,13 +112,16 @@ function displayIngredientList(recipesBook, list = []) {
         })
     })
 
-
-
     dropdownContent.appendChild(ul);
 }
 
-function displayApplicanceList(recipesBook) {
-    const applianceList = recipesBook.getAllAppliancesRecipe();
+function displayApplicanceList(recipesBook, list = []) {
+    let applianceList = recipesBook.getAllAppliancesRecipe();
+
+    if (list.length > 0) {
+        applianceList = list;
+    }
+
     const dropdownContent = document.getElementById('appliancesContent');
     const ul = document.createElement('ul');
     applianceList.forEach(applicance => {
@@ -136,8 +161,12 @@ function displayApplicanceList(recipesBook) {
     dropdownContent.appendChild(ul);
 }
 
-function displayUstensilsList(recipesBook) {
-    const ustensilsList = recipesBook.getUstentilsRecipe();
+function displayUstensilsList(recipesBook, list = []) {
+    let ustensilsList = recipesBook.getUstentilsRecipe();
+
+    if (list.length > 0) {
+        ustensilsList = list;
+    }
 
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
@@ -406,7 +435,7 @@ async function init() {
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
-    searchBar(recipesBook);
+    searchBar(recipesBook, toolsClass);
     showRecipe(recipesBook);
 
 }
