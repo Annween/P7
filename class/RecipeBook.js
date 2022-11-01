@@ -36,22 +36,25 @@ class RecipeBook
         if(!search) {
             return this.recipes;
         }
-        const results = [];
-        const array = [];
-        for (let i = 0; i < this.recipes.length; i++) {
-            const recipe = this.recipes[i];
-            if (recipe.name.toLocaleLowerCase().includes(search) || recipe.description.toLocaleLowerCase().includes(search)) {
-                results.push(recipe);
-            }
-            for (let j = 0; j < recipe.ingredients.length; j++) {
-                const ingredient = recipe.ingredients[j];
-                if (ingredient.ingredient.toLocaleLowerCase().includes(search)) {
-                    array.push(recipe);
+        if(search.length >= 3) {
+            const results = [];
+            const array = [];
+            for (let i = 0; i < this.recipes.length; i++) {
+                const recipe = this.recipes[i];
+                if (recipe.name.toLocaleLowerCase().includes(search) || recipe.description.toLocaleLowerCase().includes(search)) {
+                    results.push(recipe);
                 }
-            }
+                for (let j = 0; j < recipe.ingredients.length; j++) {
+                    const ingredient = recipe.ingredients[j];
+                    if (ingredient.ingredient.toLocaleLowerCase().includes(search)) {
+                        array.push(recipe);
+                    }
+                }
 
+            }
+            return [...new Set([...results, ...array])];
         }
-        return [...new Set([...results, ...array])];
+
     }
 
     doFilter(recipes = false, filter) {
@@ -143,15 +146,17 @@ class RecipeBook
 
     //search among filters when typing in a filter searchbar
     searchFilter(elementId) {
-        switch (elementId.id) {
-            case 'ingredient':
-                return this.ingredientArray.filter(item => item.includes(elementId.value))
-            case 'appareils':
-                return this.applicanceArray.filter(item => item.includes(elementId.value))
-            case 'ustensiles':
-                return this.ustensilsArray.filter(item =>  item.includes(elementId.value))
-        }
+        if (elementId.value.length >= 3) {
+            switch (elementId.id) {
+                case 'ingredient':
+                    return this.ingredientArray.filter(item => item.includes(elementId.value))
+                case 'appareils':
+                    return this.applicanceArray.filter(item => item.includes(elementId.value))
+                case 'ustensiles':
+                    return this.ustensilsArray.filter(item => item.includes(elementId.value))
+            }
 
+        }
     }
 
 }
