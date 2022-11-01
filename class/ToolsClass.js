@@ -1,5 +1,7 @@
 class ToolsClass {
 
+
+
     static removeDuplicates(array) {
         return array.filter(element => element === element || (element === element.replace(/s$/, '')))
     }

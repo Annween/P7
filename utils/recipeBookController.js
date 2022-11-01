@@ -48,8 +48,12 @@ function synchronizeSearchBar(recipesBook, results = [], searchValue) {
         })
 
         //loop through the appliances of each recipe and push them in the applianceList array
-        const applianceName = result.appliance.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        let applianceName = result.appliance.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        if(applianceName.includes('.')){
+            applianceName = result.appliance.replace('.', '');
+        }
         applianceList.push(applianceName.toLocaleLowerCase());
+
 
 
         result.ustensils.forEach(ustensile => {
@@ -57,17 +61,26 @@ function synchronizeSearchBar(recipesBook, results = [], searchValue) {
             utensilList.push(ustensileName.toLocaleLowerCase());
         })
 
+       const cleanedIngredientList = [...new Set(ingredientList)];
+        const cleanedApplianceList = [...new Set(applianceList)];
+        const cleanedUstensilList = [...new Set(utensilList)];
 
-        displayIngredientList(recipesBook, ingredientList, searchValue);
-        displayUstensilsList(recipesBook, utensilList, searchValue);
-        displayApplicanceList(recipesBook, applianceList, searchValue);
+        const sortedIngredientList = ToolsClass.sortArray(cleanedIngredientList);
+        const sortedApplianceList = ToolsClass.sortArray(cleanedApplianceList);
+        const sortedUstensilList = ToolsClass.sortArray(cleanedUstensilList);
+
+
+        displayIngredientList(recipesBook, sortedIngredientList, searchValue);
+        displayApplicanceList(recipesBook, sortedApplianceList, searchValue);
+        displayUstensilsList(recipesBook, sortedUstensilList, searchValue);
+
 
     })
 
 }
 
 //show IngredientList in DOM
-function displayIngredientList(recipesBook, list = [], searchValue = '') {
+function displayIngredientList(recipesBook, list = [], searchValue = '', ) {
 
     let ingredientList = recipesBook.getAllIngredientsRecipe();
 
@@ -77,9 +90,10 @@ function displayIngredientList(recipesBook, list = [], searchValue = '') {
 
     const dropdownContent = document.getElementById('ingredientsContent');
     const ul = document.createElement('ul');
-    const cleanList = [...new Set(ingredientList)];
+    //const cleanList = [...new Set(ingredientList)];
+   // const sortedList = ToolsClass.sortArray(cleanList);
 
-    cleanList.forEach(ingredient => {
+    ingredientList.forEach(ingredient => {
         //display only singular ingredients
         //if (ingredient === ingredient.replace(/s$/, '')) {
         const li = document.createElement('li');
@@ -127,9 +141,11 @@ function displayApplicanceList(recipesBook, list = [], searchValue = '') {
 
     const dropdownContent = document.getElementById('appliancesContent');
     const ul = document.createElement('ul');
-    const cleanList = [...new Set(applianceList)];
-    cleanList.forEach(applicance => {
-        if (applicance === applicance.replace(/s$/, '')) {
+    //const cleanList = [...new Set(applianceList)];
+    //const sortedList = ToolsClass.sortArray(cleanList);
+
+    applianceList.forEach(applicance => {
+
             const li = document.createElement('li');
             dropdownContent.innerHTML = ''
             li.innerHTML = applicance;
@@ -160,10 +176,8 @@ function displayApplicanceList(recipesBook, list = [], searchValue = '') {
                 searchWithFilters(recipesBook, selectedFilters);
 
             })
-        }
-
-
     })
+
 
     dropdownContent.appendChild(ul);
 }
@@ -178,8 +192,9 @@ function displayUstensilsList(recipesBook, list = [], searchValue = '') {
     const dropdownContent = document.getElementById('ustensilsContent');
     const ul = document.createElement('ul');
     const filterContainer = document.getElementById('filterContainer');
-    const cleanList = [...new Set(ustensilsList)];
-    cleanList.forEach(ustensils => {
+    //const cleanList = [...new Set(ustensilsList)];
+    //const sortedList = ToolsClass.sortArray(cleanList);
+    ustensilsList.forEach(ustensils => {
 
         const li = document.createElement('li');
         dropdownContent.innerHTML = ''
@@ -232,7 +247,6 @@ function displayFilterContent(recipesBook, elementId, dropdownId, color) {
                 dropdownContent.innerHTML = ''
                 li.innerHTML = fltr;
                 ul.appendChild(li);
-                //faire une fonction à part
                 li.addEventListener('click', (e) => {
                     const pinnedFilter = document.createElement('div');
                     pinnedFilter.classList.add('pinnedFilter');
@@ -286,10 +300,12 @@ function searchWithFilters(recipesBook, filters, searchBar = '') {
     document.getElementById('rechercher').addEventListener('keyup', ev => {
         searchBar = document.getElementById('rechercher').value;
         const results = recipesBook.doSearch(searchBar, filters);
+        synchronizeSearchBar(recipesBook, results, searchBar);
         showRecipe(recipesBook, results);
         return searchBar;
     })
     const results = recipesBook.doSearch(searchBar, filters);
+    synchronizeSearchBar(recipesBook, results, searchBar);
     showRecipe(recipesBook, results);
 
     return searchBar;
@@ -318,7 +334,7 @@ function showRecipe(recipesBook, results = false) {
         const card = document.createElement('div');
         card.classList.add('card');
         const empty = document.createElement('img');
-        empty.src = 'http://via.placeholder.com/400x200';
+        empty.src = 'images/400x200.png';
         empty.classList.add('empty');
 
         const container = document.createElement('div');
@@ -385,7 +401,7 @@ async function init() {
     const recipesArray = await getArrayRecipe();
     const recipesBook = await getRecipes(recipesArray);
     const toolsClass = await getToolsClass();
-    displayIngredientList(recipesBook, toolsClass);
+    displayIngredientList(recipesBook);
     displayUstensilsList(recipesBook);
     displayApplicanceList(recipesBook);
     for (const key in filtersConfig) displayFilterContent(recipesBook, key, filtersConfig[key].dropdownId, filtersConfig[key].color);
