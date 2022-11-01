@@ -33,7 +33,7 @@ class RecipeBook {
         }
 
         if(search.length >= 3) {
-            return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(search.toLocaleLowerCase()) || recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+            return this.recipes.filter(recipe => recipe.name.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(search.toLocaleLowerCase()) || recipe.description.toLocaleLowerCase().includes(search) || recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
         }
     }
 
@@ -70,7 +70,7 @@ class RecipeBook {
 
 
 
-        this.doFilter(recipes, filter);
+        //this.doFilter(recipes, filter);
 
     }
 
