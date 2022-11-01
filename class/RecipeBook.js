@@ -41,7 +41,7 @@ class RecipeBook
             const array = [];
             for (let i = 0; i < this.recipes.length; i++) {
                 const recipe = this.recipes[i];
-                if (recipe.name.toLocaleLowerCase().includes(search) || recipe.description.toLocaleLowerCase().includes(search)) {
+                if (recipe.name.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(search) || recipe.description.toLocaleLowerCase().includes(search)) {
                     results.push(recipe);
                 }
                 for (let j = 0; j < recipe.ingredients.length; j++) {
@@ -61,18 +61,35 @@ class RecipeBook
         if (!recipes) {
             recipes = this.recipes;
         }
+        //check if there is a match between the filter and the recipe else go to the next if
+
+        let check = [];
 
         if (this.ingredientArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase() === filter || ingredient.ingredient.toLocaleLowerCase() === filter + 's' || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
+            check =  recipes.filter(recipe => recipe.ingredients.find(ingredient => ingredient.ingredient.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter))
+            //if check === false go to the next if
+            if(check.length > 0) {
+                return check;
+            }
+        }
 
+        if (this.applicanceArray.includes(filter)) {
+            check = recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter)
+            if(check.length > 0) {
+                return check;
+            }
         }
-        else if(this.applicanceArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.appliance.toLocaleLowerCase().includes(filter) || recipe.appliance.toLocaleLowerCase().includes(filter + 's') || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || recipe.appliance.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's')
-        }
-        else if(this.ustensilsArray.includes(filter)) {
-            return recipes.filter(recipe => recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().includes(filter) || ustensil.toLocaleLowerCase().includes(filter + 's') || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter || ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter  + 's'))
 
+        if (this.ustensilsArray.includes(filter)) {
+            check = recipes.filter(recipe => recipe.ustensils.find(ustensil => ustensil.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") === filter))
+            if(check.length > 0) {
+                return check;
+            }
         }
+
+
+
+        //this.doFilter(recipes, filter);
 
     }
 
